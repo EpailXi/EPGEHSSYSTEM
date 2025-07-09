@@ -5,16 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>EPG EHS System</title>
   <style>
-    .logo {
-      font-size: 22px;
-      vertical-align: middle;
-      margin-right: 10px;
-    }
-    .title {
-      font-size: 20px;
-      font-weight: bold;
-      letter-spacing: 1px;
-    }
     body {
       margin: 0;
       font-family: Arial, sans-serif;
@@ -25,6 +15,16 @@
       color: white;
       padding: 8px 16px;
       text-align: center;
+    }
+    .logo {
+      font-size: 22px;
+      vertical-align: middle;
+      margin-right: 10px;
+    }
+    .title {
+      font-size: 20px;
+      font-weight: bold;
+      letter-spacing: 1px;
     }
     nav {
       display: flex;
@@ -60,15 +60,20 @@
     }
     iframe {
       width: 100%;
-      height: calc(100vh - 130px);
+      height: calc(100vh - 180px);
       border: none;
+    }
+    audio {
+      display: block;
+      margin: 10px auto;
+      width: 90%;
     }
   </style>
 </head>
 <body>
 
   <header>
-    <h1><span class="logo">🔧</span> <span class="title">EPG EHS System</span></h1>
+    <h1><span class="logo">🛡️</span><span class="title">EPG EHS System</span></h1>
   </header>
 
   <nav>
@@ -77,12 +82,20 @@
     <button onclick="loadTab('ppeForm')" id="tab-ppeForm">PPE Issue & Return</button>
   </nav>
 
+  <!-- Subtabs -->
+  <div id="subtabs-induction" class="subtabs" style="display: block;">
+    <button onclick="loadInductionAudio('cn')" id="subtab-cn" class="active">Chinese Voice</button>
+    <button onclick="loadInductionAudio('vn')" id="subtab-vn">Vietnamese Voice</button>
+  </div>
+
   <div id="subtabs-ppeForm" class="subtabs">
     <button onclick="loadSubTab('issue')" id="subtab-issue" class="active">Issue & Return</button>
     <button onclick="loadSubTab('search')" id="subtab-search">Search</button>
   </div>
 
+  <!-- Content -->
   <iframe id="contentFrame" src="https://epailxi.github.io/EPGNTPINDUCTION/"></iframe>
+  <audio id="voicePlayer" controls src="Chinese voice over induction H .mp3"></audio>
 
   <script>
     function clearActiveTabs() {
@@ -100,21 +113,23 @@
 
       if (tab === 'induction') {
         document.getElementById('tab-induction').classList.add("active");
-        document.getElementById('contentFrame').src = "https://epailxi.github.io/EPGNTPINDUCTION/";
+        document.getElementById('subtabs-induction').style.display = "block";
+        loadInductionAudio('cn');
       } else if (tab === 'ppeInventory') {
         document.getElementById('tab-ppeInventory').classList.add("active");
         document.getElementById('contentFrame').src = "https://twswzvv3ark.sg.feishu.cn/file/EJDJbsCNZoMoRIx2wujlpazVgDh";
+        document.getElementById('voicePlayer').style.display = "none";
       } else if (tab === 'ppeForm') {
         document.getElementById('tab-ppeForm').classList.add("active");
         document.getElementById('subtabs-ppeForm').style.display = "block";
-        loadSubTab('issue'); // Load default subtab
+        loadSubTab('issue');
       }
     }
 
     function loadSubTab(subtab) {
-      clearActiveTabs();
-      document.getElementById('tab-ppeForm').classList.add("active");
-      document.getElementById('subtabs-ppeForm').style.display = "block";
+      document.getElementById('subtab-issue').classList.remove("active");
+      document.getElementById('subtab-search').classList.remove("active");
+      document.getElementById('voicePlayer').style.display = "none";
 
       if (subtab === 'issue') {
         document.getElementById('subtab-issue').classList.add("active");
@@ -122,6 +137,23 @@
       } else if (subtab === 'search') {
         document.getElementById('subtab-search').classList.add("active");
         document.getElementById('contentFrame').src = "https://twswzvv3ark.sg.feishu.cn/share/base/query/shrlgX74PkvggRvBLlfoFwKzXtZ";
+      }
+    }
+
+    function loadInductionAudio(lang) {
+      document.getElementById('subtab-cn').classList.remove("active");
+      document.getElementById('subtab-vn').classList.remove("active");
+
+      if (lang === 'cn') {
+        document.getElementById('subtab-cn').classList.add("active");
+        document.getElementById('contentFrame').src = "https://epailxi.github.io/EPGNTPINDUCTION/";
+        document.getElementById('voicePlayer').src = "Chinese voice over induction H .mp3";
+        document.getElementById('voicePlayer').style.display = "block";
+      } else if (lang === 'vn') {
+        document.getElementById('subtab-vn').classList.add("active");
+        document.getElementById('contentFrame').src = "https://epailxi.github.io/EPGNTPINDUCTION/";
+        document.getElementById('voicePlayer').src = "Vietnam voice over induction H .mp3";
+        document.getElementById('voicePlayer').style.display = "block";
       }
     }
   </script>
