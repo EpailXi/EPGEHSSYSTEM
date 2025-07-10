@@ -5,125 +5,104 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>EPG EHS System</title>
   <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f4f4f4;
-    }
-    header {
-      background: #004d99;
-      color: white;
-      padding: 8px 16px;
-      text-align: center;
-    }
-    .logo {
-      font-size: 22px;
-      vertical-align: middle;
-      margin-right: 10px;
-    }
-    .title {
-      font-size: 20px;
-      font-weight: bold;
-      letter-spacing: 1px;
-    }
-    nav {
-      display: flex;
-      background: #e6e6e6;
-      border-bottom: 1px solid #ccc;
-    }
+    body { margin:0; font-family:Arial,sans-serif; background:#f4f4f4; }
+    header { background:#004d99; color:#fff; padding:8px 16px; text-align:center; }
+    .logo { font-size:22px; margin-right:10px; }
+    .title { font-size:20px; font-weight:bold; letter-spacing:1px; }
+    nav { display:flex; background:#e6e6e6; border-bottom:1px solid #ccc; }
     nav button {
-      flex: 1;
-      padding: 12px;
-      border: none;
-      background: inherit;
-      font-size: 16px;
-      cursor: pointer;
+      flex:1; padding:12px; border:none; background:inherit;
+      font-size:16px; cursor:pointer; transition:background 0.3s;
     }
-    nav button:hover, nav button.active {
-      background: #d0e0ff;
-    }
-    .subtabs, .tab-content {
-      display: none;
-      padding: 20px;
-    }
-    .tab-content.active {
-      display: block;
-    }
-    iframe {
-      width: 100%;
-      height: calc(100vh - 130px);
-      border: none;
-    }
+    nav button:hover, nav button.active { background:#d0e0ff; }
+    .tab-content { display:none; }
+    .tab-content.active { display:block; }
+    iframe { width:100%; height:calc(100vh - 130px); border:none; }
     .audio-buttons {
-      display: flex;
-      gap: 20px;
-      justify-content: center;
-      padding: 20px;
+      display:flex; gap:20px; justify-content:center; padding:20px; flex-wrap:wrap;
     }
-    .audio-section {
-      display: none;
-      text-align: center;
-    }
-    .audio-section.active {
-      display: block;
-    }
+    .audio-section { display:none; text-align:center; }
+    .audio-section.active { display:block; }
   </style>
 </head>
 <body>
 
-  <header>
-    <h1><span class="logo">🛡️</span><span class="title">EPG EHS System</span></h1>
-  </header>
+<header>
+  <h1><span class="logo">🛡️</span><span class="title">EPG EHS System</span></h1>
+</header>
 
-  <nav>
-    <button onclick="showTab('induction')" id="tab-induction" class="active">Induction</button>
-    <button onclick="showTab('voiceover')" id="tab-voiceover">Induction Voice Over</button>
-    <button onclick="showTab('ppeInventory')" id="tab-ppeInventory">PPE Inventory</button>
-    <button onclick="showTab('ppeForm')" id="tab-ppeForm">PPE Issue & Return</button>
-  </nav>
+<nav>
+  <button id="tab-induction" class="active" data-tab="induction">Induction</button>
+  <button id="tab-voiceover" data-tab="voiceover">Induction Voice Over</button>
+  <button id="tab-ppeInventory" data-tab="ppeInventory">PPE Inventory</button>
+  <button id="tab-ppeForm" data-tab="ppeForm">PPE Issue & Return</button>
+</nav>
 
-  <div id="content-induction" class="tab-content active">
-    <iframe src="https://epailxi.github.io/EPGNTPINDUCTION/"></iframe>
-  </div>
-
+<main>
+  <div id="content-induction" class="tab-content active" data-url="https://epailxi.github.io/EPGNTPINDUCTION/"></div>
   <div id="content-voiceover" class="tab-content">
     <div class="audio-buttons">
-      <button onclick="playAudio('chinese')">▶ Chinese Voice Over</button>
-      <button onclick="playAudio('vietnamese')">▶ Vietnamese Voice Over</button>
+      <button data-lang="chinese">▶ Chinese Voice Over</button>
+      <button data-lang="vietnamese">▶ Vietnamese Voice Over</button>
     </div>
     <div id="chinese" class="audio-section">
-      <audio controls src="Chinese voice over induction H .mp3"></audio>
+      <audio preload="none" controls>
+        <source src="Chinese voice over induction H .mp3" type="audio/mpeg">
+      </audio>
     </div>
     <div id="vietnamese" class="audio-section">
-      <audio controls src="Vietnam voice over induction H .mp3"></audio>
+      <audio preload="none" controls>
+        <source src="Vietnam voice over induction H .mp3" type="audio/mpeg">
+      </audio>
     </div>
   </div>
+  <div id="content-ppeInventory" class="tab-content" data-url="https://twswzvv3ark.sg.feishu.cn/file/EJDJbsCNZoMoRIx2wujlpazVgDh"></div>
+  <div id="content-ppeForm" class="tab-content" data-url="https://twswzvv3ark.sg.feishu.cn/share/base/form/shrlgLgnuhFnHx9HmffMoKyrfjf"></div>
+</main>
 
-  <div id="content-ppeInventory" class="tab-content">
-    <iframe src="https://twswzvv3ark.sg.feishu.cn/file/EJDJbsCNZoMoRIx2wujlpazVgDh"></iframe>
-  </div>
+<script>
+  const tabs = document.querySelectorAll("nav button");
+  const contents = document.querySelectorAll(".tab-content");
 
-  <div id="content-ppeForm" class="tab-content">
-    <iframe src="https://twswzvv3ark.sg.feishu.cn/share/base/form/shrlgLgnuhFnHx9HmffMoKyrfjf"></iframe>
-  </div>
+  tabs.forEach(btn => {
+    btn.addEventListener("click", () => {
+      // Update active tab UI
+      tabs.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
 
-  <script>
-    function showTab(tabName) {
-      document.querySelectorAll("nav button").forEach(btn => btn.classList.remove("active"));
-      document.getElementById("tab-" + tabName).classList.add("active");
+      // Switch tab content
+      const tabName = btn.dataset.tab;
+      contents.forEach(div => {
+        if (div.id === `content-${tabName}`) {
+          div.classList.add("active");
 
-      document.querySelectorAll(".tab-content").forEach(tab => tab.classList.remove("active"));
-      document.getElementById("content-" + tabName).classList.add("active");
+          // Lazy load iframe once
+          if (!div.dataset.loaded && div.dataset.url) {
+            const iframe = document.createElement("iframe");
+            iframe.src = div.dataset.url;
+            iframe.loading = "lazy";
+            div.appendChild(iframe);
+            div.dataset.loaded = "true";
+          }
+        } else {
+          div.classList.remove("active");
+        }
+      });
 
-      // Hide audio on tab switch
+      // Reset audio section when switching away
       document.querySelectorAll(".audio-section").forEach(el => el.classList.remove("active"));
-    }
+    });
+  });
 
-    function playAudio(language) {
-      document.querySelectorAll(".audio-section").forEach(el => el.classList.remove("active"));
-      document.getElementById(language).classList.add("active");
-    }
-  </script>
+  // Toggle audio player
+  document.querySelectorAll(".audio-buttons button").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const lang = btn.dataset.lang;
+      document.querySelectorAll(".audio-section").forEach(section => section.classList.remove("active"));
+      document.getElementById(lang).classList.add("active");
+    });
+  });
+</script>
 
 </body>
 </html>
