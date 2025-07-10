@@ -5,37 +5,54 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>EPG EHS System</title>
   <style>
-    body { margin:0; font-family:Arial,sans-serif; background:#f4f4f4; }
-    header {
-      background:#004d99;
-      color:#fff;
-      padding: 2px 8px;
-      text-align:center;
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
     }
-    .logo { font-size:14px; margin-right:4px; }
-    .title { font-size:13px; font-weight:bold; letter-spacing:0.3px; }
+    header {
+      background: #004d99;
+      color: #fff;
+      padding: 6px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    header img {
+      height: 28px;
+      vertical-align: middle;
+    }
+    .title {
+      font-size: 18px;
+      font-weight: bold;
+      letter-spacing: 0.4px;
+    }
     nav {
-      display:flex;
-      background:#e6e6e6;
-      border-bottom:1px solid #ccc;
+      display: flex;
+      background: #e6e6e6;
+      border-bottom: 1px solid #ccc;
       flex-wrap: wrap;
     }
     nav button {
-      flex:1;
-      padding:10px;
-      border:none;
-      background:inherit;
-      font-size:15px;
-      cursor:pointer;
-      transition:background 0.3s;
+      flex: 1;
+      padding: 10px;
+      border: none;
+      background: inherit;
+      font-size: 15px;
+      cursor: pointer;
+      transition: background 0.3s;
     }
-    nav button:hover, nav button.active {
-      background:#d0e0ff;
+    nav button:hover,
+    nav button.active {
+      background: #d0e0ff;
     }
-    .tab-content, .subtab-content {
+    .tab-content,
+    .subtab-content {
       display: none;
     }
-    .tab-content.active, .subtab-content.active {
+    .tab-content.active,
+    .subtab-content.active {
       display: block;
     }
     iframe {
@@ -44,11 +61,11 @@
       border: none;
     }
     .audio-buttons {
-      display:flex;
-      gap:20px;
-      justify-content:center;
-      padding:20px;
-      flex-wrap:wrap;
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      padding: 20px;
+      flex-wrap: wrap;
     }
     .audio-section {
       display: none;
@@ -70,7 +87,8 @@
       cursor: pointer;
       font-size: 14px;
     }
-    .subtabs button:hover, .subtabs button.active {
+    .subtabs button:hover,
+    .subtabs button.active {
       background: #d0e0ff;
     }
     .loader {
@@ -100,50 +118,42 @@
 <body>
 
 <header>
-  <h1><span class="logo">🛡️</span><span class="title">EPG EHS System</span></h1>
+  <img src="data:image/png;base64,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" alt="logo">
+  <span class="title">EPG EHS System</span>
 </header>
 
 <nav>
-  <button id="tab-induction" class="active" data-tab="induction">Induction</button>
-  <button id="tab-cidb" data-tab="cidb">CIDB Slip Print</button>
-  <button id="tab-voiceover" data-tab="voiceover">Induction Voice Over</button>
-  <button id="tab-ppeInventory" data-tab="ppeInventory">PPE Inventory</button>
-  <button id="tab-ppeForm" data-tab="ppeForm">PPE Issue & Return</button>
+  <button class="active" data-tab="induction">Induction</button>
+  <button data-tab="cidb">CIDB Slip Print</button>
+  <button data-tab="voiceover">Induction Voice Over</button>
+  <button data-tab="ppeInventory">PPE Inventory</button>
+  <button data-tab="ppeForm">PPE Issue & Return</button>
 </nav>
 
 <main>
-  <!-- Induction -->
   <div id="content-induction" class="tab-content active" data-url="https://epailxi.github.io/EPGNTPINDUCTION/"></div>
-
-  <!-- CIDB -->
   <div id="content-cidb" class="tab-content" data-url="https://epailxi.github.io/CIDBSlipDownload/"></div>
-
-  <!-- Voice Over -->
   <div id="content-voiceover" class="tab-content">
     <div class="audio-buttons">
       <button data-lang="chinese">▶ Chinese Voice Over</button>
       <button data-lang="vietnamese">▶ Vietnamese Voice Over</button>
     </div>
     <div id="chinese" class="audio-section">
-      <audio preload="none" controls>
+      <audio controls preload="none">
         <source src="Chinese voice over induction H .mp3" type="audio/mpeg">
       </audio>
     </div>
     <div id="vietnamese" class="audio-section">
-      <audio preload="none" controls>
+      <audio controls preload="none">
         <source src="Vietnam voice over induction H .mp3" type="audio/mpeg">
       </audio>
     </div>
   </div>
-
-  <!-- PPE Inventory -->
   <div id="content-ppeInventory" class="tab-content" data-url="https://twswzvv3ark.sg.feishu.cn/file/EJDJbsCNZoMoRIx2wujlpazVgDh"></div>
-
-  <!-- PPE Form -->
   <div id="content-ppeForm" class="tab-content">
     <div class="subtabs">
-      <button id="subtab-issue" class="active" data-subtab="issue">Issue & Return</button>
-      <button id="subtab-search" data-subtab="search">Search</button>
+      <button class="active" data-subtab="issue">Issue & Return</button>
+      <button data-subtab="search">Search</button>
     </div>
     <div id="subcontent-issue" class="subtab-content active" data-url="https://twswzvv3ark.sg.feishu.cn/share/base/form/shrlgLgnuhFnHx9HmffMoKyrfjf"></div>
     <div id="subcontent-search" class="subtab-content" data-url="https://twswzvv3ark.sg.feishu.cn/share/base/query/shrlgX74PkvggRvBLlfoFwKzXtZ"></div>
@@ -159,7 +169,6 @@
       tabs.forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
       const tabName = btn.dataset.tab;
-
       contents.forEach(div => {
         if (div.id === `content-${tabName}`) {
           div.classList.add("active");
@@ -168,7 +177,6 @@
           div.classList.remove("active");
         }
       });
-
       document.querySelectorAll(".audio-section").forEach(el => el.classList.remove("active"));
     });
   });
@@ -189,7 +197,6 @@
       subtabButtons.forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
       const sub = btn.dataset.subtab;
-
       subcontents.forEach(div => {
         if (div.id === `subcontent-${sub}`) {
           div.classList.add("active");
@@ -202,21 +209,20 @@
   });
 
   function loadIframeIfNeeded(container) {
-    if (container.dataset.loaded || !container.dataset.url) return;
-
-    const loader = document.createElement("div");
-    loader.className = "loader";
-    loader.innerHTML = `<div class="spinner"></div><div>Please wait ~5 seconds...</div>`;
-    container.appendChild(loader);
-
-    const iframe = document.createElement("iframe");
-    iframe.src = container.dataset.url;
-    iframe.loading = "lazy";
-    iframe.onload = () => loader.remove();
-
-    container.appendChild(iframe);
-    container.dataset.loaded = "true";
+    if (!container.querySelector("iframe") && container.dataset.url) {
+      const loader = document.createElement("div");
+      loader.className = "loader";
+      loader.innerHTML = `<div class="spinner"></div>Loading...`;
+      container.appendChild(loader);
+      const iframe = document.createElement("iframe");
+      iframe.src = container.dataset.url;
+      iframe.onload = () => loader.remove();
+      container.appendChild(iframe);
+    }
   }
+
+  // Load first iframe on page load
+  loadIframeIfNeeded(document.querySelector(".tab-content.active"));
 </script>
 
 </body>
