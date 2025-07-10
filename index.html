@@ -15,14 +15,30 @@
       font-size:16px; cursor:pointer; transition:background 0.3s;
     }
     nav button:hover, nav button.active { background:#d0e0ff; }
-    .tab-content { display:none; }
-    .tab-content.active { display:block; }
-    iframe { width:100%; height:calc(100vh - 130px); border:none; }
+    .tab-content, .subtab-content { display:none; }
+    .tab-content.active, .subtab-content.active { display:block; }
+    iframe { width:100%; height:calc(100vh - 170px); border:none; }
     .audio-buttons {
       display:flex; gap:20px; justify-content:center; padding:20px; flex-wrap:wrap;
     }
     .audio-section { display:none; text-align:center; }
     .audio-section.active { display:block; }
+    .subtabs {
+      display: flex;
+      justify-content: center;
+      background: #f0f0f0;
+      border-bottom: 1px solid #ccc;
+    }
+    .subtabs button {
+      padding: 10px 20px;
+      border: none;
+      background: inherit;
+      cursor: pointer;
+      font-size: 15px;
+    }
+    .subtabs button:hover, .subtabs button.active {
+      background: #d0e0ff;
+    }
   </style>
 </head>
 <body>
@@ -39,7 +55,10 @@
 </nav>
 
 <main>
+  <!-- Induction -->
   <div id="content-induction" class="tab-content active" data-url="https://epailxi.github.io/EPGNTPINDUCTION/"></div>
+
+  <!-- Voice Over -->
   <div id="content-voiceover" class="tab-content">
     <div class="audio-buttons">
       <button data-lang="chinese">▶ Chinese Voice Over</button>
@@ -56,8 +75,19 @@
       </audio>
     </div>
   </div>
+
+  <!-- PPE Inventory -->
   <div id="content-ppeInventory" class="tab-content" data-url="https://twswzvv3ark.sg.feishu.cn/file/EJDJbsCNZoMoRIx2wujlpazVgDh"></div>
-  <div id="content-ppeForm" class="tab-content" data-url="https://twswzvv3ark.sg.feishu.cn/share/base/form/shrlgLgnuhFnHx9HmffMoKyrfjf"></div>
+
+  <!-- PPE Form -->
+  <div id="content-ppeForm" class="tab-content">
+    <div class="subtabs">
+      <button id="subtab-issue" class="active" data-subtab="issue">Issue & Return</button>
+      <button id="subtab-search" data-subtab="search">Search</button>
+    </div>
+    <div id="subcontent-issue" class="subtab-content active" data-url="https://twswzvv3ark.sg.feishu.cn/share/base/form/shrlgLgnuhFnHx9HmffMoKyrfjf"></div>
+    <div id="subcontent-search" class="subtab-content" data-url="https://twswzvv3ark.sg.feishu.cn/share/base/query/shrlgX74PkvggRvBLlfoFwKzXtZ"></div>
+  </div>
 </main>
 
 <script>
@@ -66,17 +96,13 @@
 
   tabs.forEach(btn => {
     btn.addEventListener("click", () => {
-      // Update active tab UI
       tabs.forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
-
-      // Switch tab content
       const tabName = btn.dataset.tab;
+
       contents.forEach(div => {
         if (div.id === `content-${tabName}`) {
           div.classList.add("active");
-
-          // Lazy load iframe once
           if (!div.dataset.loaded && div.dataset.url) {
             const iframe = document.createElement("iframe");
             iframe.src = div.dataset.url;
@@ -89,17 +115,43 @@
         }
       });
 
-      // Reset audio section when switching away
       document.querySelectorAll(".audio-section").forEach(el => el.classList.remove("active"));
     });
   });
 
-  // Toggle audio player
   document.querySelectorAll(".audio-buttons button").forEach(btn => {
     btn.addEventListener("click", () => {
       const lang = btn.dataset.lang;
       document.querySelectorAll(".audio-section").forEach(section => section.classList.remove("active"));
       document.getElementById(lang).classList.add("active");
+    });
+  });
+
+  // Handle subtabs under PPE Issue & Return
+  const subtabButtons = document.querySelectorAll(".subtabs button");
+  const subcontents = document.querySelectorAll(".subtab-content");
+
+  subtabButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      subtabButtons.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+
+      const sub = btn.dataset.subtab;
+
+      subcontents.forEach(div => {
+        if (div.id === `subcontent-${sub}`) {
+          div.classList.add("active");
+          if (!div.dataset.loaded && div.dataset.url) {
+            const iframe = document.createElement("iframe");
+            iframe.src = div.dataset.url;
+            iframe.loading = "lazy";
+            div.appendChild(iframe);
+            div.dataset.loaded = "true";
+          }
+        } else {
+          div.classList.remove("active");
+        }
+      });
     });
   });
 </script>
