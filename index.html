@@ -125,6 +125,7 @@
 <nav>
   <button class="active" data-tab="induction">Induction</button>
   <button data-tab="cidb">CIDB Slip Print</button>
+  <button data-tab="fomema">IMMIGRATION FOMEMA Check</button>
   <button data-tab="voiceover">Induction Voice Over</button>
   <button data-tab="ppeInventory">PPE Inventory</button>
   <button data-tab="ppeForm">PPE Issue & Return</button>
@@ -133,18 +134,19 @@
 <main>
   <div id="content-induction" class="tab-content active" data-url="https://epailxi.github.io/EPGNTPINDUCTION/"></div>
   <div id="content-cidb" class="tab-content" data-url="https://epailxi.github.io/CIDBSlipDownload/"></div>
+  <div id="content-fomema" class="tab-content" data-url="https://eservices.imi.gov.my/myimms/FomemaStatus"></div>
   <div id="content-voiceover" class="tab-content">
     <div class="audio-buttons">
       <button data-lang="chinese">▶ Chinese Voice Over</button>
       <button data-lang="vietnamese">▶ Vietnamese Voice Over</button>
     </div>
     <div id="chinese" class="audio-section">
-      <audio controls preload="none">
+      <audio controls>
         <source src="Chinese voice over induction H .mp3" type="audio/mpeg">
       </audio>
     </div>
     <div id="vietnamese" class="audio-section">
-      <audio controls preload="none">
+      <audio controls>
         <source src="Vietnam voice over induction H .mp3" type="audio/mpeg">
       </audio>
     </div>
@@ -209,20 +211,18 @@
   });
 
   function loadIframeIfNeeded(container) {
-    if (!container.querySelector("iframe") && container.dataset.url) {
-      const loader = document.createElement("div");
-      loader.className = "loader";
-      loader.innerHTML = `<div class="spinner"></div>Loading...`;
-      container.appendChild(loader);
-      const iframe = document.createElement("iframe");
-      iframe.src = container.dataset.url;
-      iframe.onload = () => loader.remove();
-      container.appendChild(iframe);
-    }
+    if (container.dataset.loaded || !container.dataset.url) return;
+    const loader = document.createElement("div");
+    loader.className = "loader";
+    loader.innerHTML = `<div class="spinner"></div><div>Please wait ~5 seconds...</div>`;
+    container.appendChild(loader);
+    const iframe = document.createElement("iframe");
+    iframe.src = container.dataset.url;
+    iframe.loading = "lazy";
+    iframe.onload = () => loader.remove();
+    container.appendChild(iframe);
+    container.dataset.loaded = "true";
   }
-
-  // Load first iframe on page load
-  loadIframeIfNeeded(document.querySelector(".tab-content.active"));
 </script>
 
 </body>
