@@ -7,23 +7,25 @@
   <style>
     body { margin:0; font-family:Arial,sans-serif; background:#f4f4f4; }
     header {
-      background:#004d99; color:#fff;
-      padding: 4px 12px;
+      background:#004d99;
+      color:#fff;
+      padding: 2px 8px;
       text-align:center;
     }
-    .logo { font-size:18px; margin-right:6px; }
-    .title { font-size:16px; font-weight:bold; letter-spacing:0.5px; }
+    .logo { font-size:14px; margin-right:4px; }
+    .title { font-size:13px; font-weight:bold; letter-spacing:0.3px; }
     nav {
       display:flex;
       background:#e6e6e6;
       border-bottom:1px solid #ccc;
+      flex-wrap: wrap;
     }
     nav button {
       flex:1;
-      padding:12px;
+      padding:10px;
       border:none;
       background:inherit;
-      font-size:16px;
+      font-size:15px;
       cursor:pointer;
       transition:background 0.3s;
     }
@@ -38,7 +40,7 @@
     }
     iframe {
       width: 100%;
-      height: calc(100vh - 150px);
+      height: calc(100vh - 140px);
       border: none;
     }
     .audio-buttons {
@@ -62,11 +64,11 @@
       border-bottom: 1px solid #ccc;
     }
     .subtabs button {
-      padding: 10px 20px;
+      padding: 8px 16px;
       border: none;
       background: inherit;
       cursor: pointer;
-      font-size: 15px;
+      font-size: 14px;
     }
     .subtabs button:hover, .subtabs button.active {
       background: #d0e0ff;
@@ -103,6 +105,7 @@
 
 <nav>
   <button id="tab-induction" class="active" data-tab="induction">Induction</button>
+  <button id="tab-cidb" data-tab="cidb">CIDB Slip Print</button>
   <button id="tab-voiceover" data-tab="voiceover">Induction Voice Over</button>
   <button id="tab-ppeInventory" data-tab="ppeInventory">PPE Inventory</button>
   <button id="tab-ppeForm" data-tab="ppeForm">PPE Issue & Return</button>
@@ -111,6 +114,9 @@
 <main>
   <!-- Induction -->
   <div id="content-induction" class="tab-content active" data-url="https://epailxi.github.io/EPGNTPINDUCTION/"></div>
+
+  <!-- CIDB -->
+  <div id="content-cidb" class="tab-content" data-url="https://epailxi.github.io/CIDBSlipDownload/"></div>
 
   <!-- Voice Over -->
   <div id="content-voiceover" class="tab-content">
