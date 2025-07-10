@@ -6,25 +6,55 @@
   <title>EPG EHS System</title>
   <style>
     body { margin:0; font-family:Arial,sans-serif; background:#f4f4f4; }
-    header { background:#004d99; color:#fff; padding:8px 16px; text-align:center; }
-    .logo { font-size:22px; margin-right:10px; }
-    .title { font-size:20px; font-weight:bold; letter-spacing:1px; }
-    nav { display:flex; background:#e6e6e6; border-bottom:1px solid #ccc; }
+    header {
+      background:#004d99; color:#fff;
+      padding: 4px 12px;
+      text-align:center;
+    }
+    .logo { font-size:18px; margin-right:6px; }
+    .title { font-size:16px; font-weight:bold; letter-spacing:0.5px; }
+    nav {
+      display:flex;
+      background:#e6e6e6;
+      border-bottom:1px solid #ccc;
+    }
     nav button {
-      flex:1; padding:12px; border:none; background:inherit;
-      font-size:16px; cursor:pointer; transition:background 0.3s;
+      flex:1;
+      padding:12px;
+      border:none;
+      background:inherit;
+      font-size:16px;
+      cursor:pointer;
+      transition:background 0.3s;
     }
-    nav button:hover, nav button.active { background:#d0e0ff; }
-    .tab-content, .subtab-content { display:none; }
-    .tab-content.active, .subtab-content.active { display:block; }
-    iframe { width:100%; height:calc(100vh - 170px); border:none; }
-
+    nav button:hover, nav button.active {
+      background:#d0e0ff;
+    }
+    .tab-content, .subtab-content {
+      display: none;
+    }
+    .tab-content.active, .subtab-content.active {
+      display: block;
+    }
+    iframe {
+      width: 100%;
+      height: calc(100vh - 150px);
+      border: none;
+    }
     .audio-buttons {
-      display:flex; gap:20px; justify-content:center; padding:20px; flex-wrap:wrap;
+      display:flex;
+      gap:20px;
+      justify-content:center;
+      padding:20px;
+      flex-wrap:wrap;
     }
-    .audio-section { display:none; text-align:center; }
-    .audio-section.active { display:block; }
-
+    .audio-section {
+      display: none;
+      text-align: center;
+    }
+    .audio-section.active {
+      display: block;
+    }
     .subtabs {
       display: flex;
       justify-content: center;
@@ -41,7 +71,6 @@
     .subtabs button:hover, .subtabs button.active {
       background: #d0e0ff;
     }
-
     .loader {
       display: flex;
       flex-direction: column;
@@ -51,7 +80,6 @@
       font-size: 16px;
       color: #333;
     }
-
     .spinner {
       width: 40px;
       height: 40px;
@@ -61,7 +89,6 @@
       animation: spin 1s linear infinite;
       margin-bottom: 10px;
     }
-
     @keyframes spin {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
@@ -148,7 +175,6 @@
     });
   });
 
-  // Subtab logic
   const subtabButtons = document.querySelectorAll(".subtabs button");
   const subcontents = document.querySelectorAll(".subtab-content");
 
@@ -156,7 +182,6 @@
     btn.addEventListener("click", () => {
       subtabButtons.forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
-
       const sub = btn.dataset.subtab;
 
       subcontents.forEach(div => {
@@ -170,7 +195,6 @@
     });
   });
 
-  // Lazy iframe + loader
   function loadIframeIfNeeded(container) {
     if (container.dataset.loaded || !container.dataset.url) return;
 
