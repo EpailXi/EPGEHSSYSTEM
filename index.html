@@ -137,15 +137,21 @@
     <div class="audio-buttons">
       <button data-lang="chinese">▶ Chinese Voice Over</button>
       <button data-lang="vietnamese">▶ Vietnamese Voice Over</button>
+      <button data-lang="bangla">▶ Bangla Voice Over</button>
     </div>
     <div id="chinese" class="audio-section">
       <audio preload="none" controls>
-        <source src="Chinese voice over induction H .mp3" type="audio/mpeg">
+        <source src="Chinese voice over induction H.mp3" type="audio/mpeg">
       </audio>
     </div>
     <div id="vietnamese" class="audio-section">
       <audio preload="none" controls>
-        <source src="Vietnam voice over induction H .mp3" type="audio/mpeg">
+        <source src="Vietnam voice over induction H.mp3" type="audio/mpeg">
+      </audio>
+    </div>
+    <div id="bangla" class="audio-section">
+      <audio preload="none" controls>
+        <source src="Bangla voice over induction H.mp3" type="audio/mpeg">
       </audio>
     </div>
   </div>
@@ -165,8 +171,23 @@
   const tabs = document.querySelectorAll("nav button");
   const contents = document.querySelectorAll(".tab-content");
 
-  // Restore saved tab
-  const savedTab = localStorage.getItem("activeTab");
+  function getStorage(key) {
+    try {
+      return localStorage.getItem(key);
+    } catch {
+      return sessionStorage.getItem(key); // Fallback for iOS/Android restrictions
+    }
+  }
+
+  function setStorage(key, value) {
+    try {
+      localStorage.setItem(key, value);
+    } catch {
+      sessionStorage.setItem(key, value); // Fallback
+    }
+  }
+
+  const savedTab = getStorage("activeTab");
   if (savedTab) {
     tabs.forEach(b => b.classList.remove("active"));
     contents.forEach(c => c.classList.remove("active"));
@@ -181,7 +202,7 @@
   tabs.forEach(btn => {
     btn.addEventListener("click", () => {
       const tab = btn.dataset.tab;
-      localStorage.setItem("activeTab", tab);
+      setStorage("activeTab", tab);
       tabs.forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
       contents.forEach(div => {
