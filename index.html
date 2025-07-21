@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>EPG EHS System</title>
   <style>
     body {
@@ -119,21 +119,21 @@
   <span class="title">EPG EHS System</span>
 </header>
 
-<nav>
-  <button class="active" data-tab="induction">Induction</button>
-  <button data-tab="cidb">CIDB Slip Print</button>
-  <button data-tab="immigration">IMMIGRATION FOMEMA Check</button>
-  <button data-tab="voiceover">Induction Voice Over</button>
-  <button data-tab="ppeInventory">PPE Inventory</button>
-  <button data-tab="ppeForm">PPE Issue & Return</button>
+<nav role="tablist">
+  <button role="tab" aria-controls="content-induction" class="active" data-tab="induction">Induction</button>
+  <button role="tab" aria-controls="content-cidb" data-tab="cidb">CIDB Slip Print</button>
+  <button role="tab" aria-controls="content-immigration" data-tab="immigration">Immigration Fomema Check</button>
+  <button role="tab" aria-controls="content-voiceover" data-tab="voiceover">Induction Voice Over</button>
+  <button role="tab" aria-controls="content-ppeInventory" data-tab="ppeInventory">PPE Inventory</button>
+  <button role="tab" aria-controls="content-ppeForm" data-tab="ppeForm">PPE Issue & Return</button>
 </nav>
 
 <main>
-  <div id="content-induction" class="tab-content active" data-url="https://epailxi.github.io/EPGNTPINDUCTION/"></div>
-  <div id="content-cidb" class="tab-content" data-url="https://epailxi.github.io/CIDBSlipDownload/"></div>
-  <div id="content-immigration" class="tab-content" data-url="https://eservices.imi.gov.my/myimms/FomemaStatus"></div>
+  <div id="content-induction" role="tabpanel" class="tab-content active" data-url="https://epailxi.github.io/EPGNTPINDUCTION/"></div>
+  <div id="content-cidb" role="tabpanel" class="tab-content" data-url="https://epailxi.github.io/CIDBSlipDownload/"></div>
+  <div id="content-immigration" role="tabpanel" class="tab-content" data-url="https://eservices.imi.gov.my/myimms/FomemaStatus"></div>
 
-  <div id="content-voiceover" class="tab-content">
+  <div id="content-voiceover" role="tabpanel" class="tab-content">
     <div class="audio-buttons">
       <button data-lang="chinese">▶ Chinese Voice Over</button>
       <button data-lang="vietnamese">▶ Vietnamese Voice Over</button>
@@ -141,29 +141,29 @@
     </div>
     <div id="chinese" class="audio-section">
       <audio preload="none" controls>
-        <source src="Chinese voice over induction H.mp3" type="audio/mpeg">
+        <source src="Chinese-voice-over-induction-H.mp3" type="audio/mpeg">
       </audio>
     </div>
     <div id="vietnamese" class="audio-section">
       <audio preload="none" controls>
-        <source src="Vietnam voice over induction H.mp3" type="audio/mpeg">
+        <source src="Vietnam-voice-over-induction-H.mp3" type="audio/mpeg">
       </audio>
     </div>
     <div id="bangla" class="audio-section">
       <audio preload="none" controls>
-        <source src="Bangla voice over induction H.mp3" type="audio/mpeg">
+        <source src="Bangla-voice-over-induction-H.mp3" type="audio/mpeg">
       </audio>
     </div>
   </div>
 
-  <div id="content-ppeInventory" class="tab-content" data-url="https://twswzvv3ark.sg.feishu.cn/file/EJDJbsCNZoMoRIx2wujlpazVgDh"></div>
-  <div id="content-ppeForm" class="tab-content">
-    <div class="subtabs">
-      <button class="active" data-subtab="issue">Issue & Return</button>
-      <button data-subtab="search">Search</button>
+  <div id="content-ppeInventory" role="tabpanel" class="tab-content" data-url="https://twswzvv3ark.sg.feishu.cn/file/EJDJbsCNZoMoRIx2wujlpazVgDh"></div>
+  <div id="content-ppeForm" role="tabpanel" class="tab-content">
+    <div class="subtabs" role="tablist">
+      <button role="tab" aria-controls="subcontent-issue" class="active" data-subtab="issue">Issue & Return</button>
+      <button role="tab" aria-controls="subcontent-search" data-subtab="search">Search</button>
     </div>
-    <div id="subcontent-issue" class="subtab-content active" data-url="https://twswzvv3ark.sg.feishu.cn/share/base/form/shrlgLgnuhFnHx9HmffMoKyrfjf"></div>
-    <div id="subcontent-search" class="subtab-content" data-url="https://twswzvv3ark.sg.feishu.cn/share/base/query/shrlgX74PkvggRvBLlfoFwKzXtZ"></div>
+    <div id="subcontent-issue" role="tabpanel" class="subtab-content active" data-url="https://twswzvv3ark.sg.feishu.cn/share/base/form/shrlgLgnuhFnHx9HmffMoKyrfjf"></div>
+    <div id="subcontent-search" role="tabpanel" class="subtab-content" data-url="https://twswzvv3ark.sg.feishu.cn/share/base/query/shrlgX74PkvggRvBLlfoFwKzXtZ"></div>
   </div>
 </main>
 
@@ -174,16 +174,27 @@
   function getStorage(key) {
     try {
       return localStorage.getItem(key);
-    } catch {
-      return sessionStorage.getItem(key); // Fallback for iOS/Android restrictions
+    } catch (e) {
+      console.warn('LocalStorage failed, falling back to sessionStorage', e);
+      try {
+        return sessionStorage.getItem(key);
+      } catch (e2) {
+        console.warn('SessionStorage failed', e2);
+        return null;
+      }
     }
   }
 
   function setStorage(key, value) {
     try {
       localStorage.setItem(key, value);
-    } catch {
-      sessionStorage.setItem(key, value); // Fallback
+    } catch (e) {
+      console.warn('LocalStorage set failed, falling back to sessionStorage', e);
+      try {
+        sessionStorage.setItem(key, value);
+      } catch (e2) {
+        console.warn('SessionStorage set failed', e2);
+      }
     }
   }
 
@@ -191,9 +202,10 @@
   if (savedTab) {
     tabs.forEach(b => b.classList.remove("active"));
     contents.forEach(c => c.classList.remove("active"));
-    document.querySelector(`nav button[data-tab="${savedTab}"]`)?.classList.add("active");
+    const btn = document.querySelector(`nav button[data-tab="${savedTab}"]`);
     const target = document.getElementById("content-" + savedTab);
-    if (target) {
+    if (btn && target) {
+      btn.classList.add("active");
       target.classList.add("active");
       loadIframeIfNeeded(target);
     }
@@ -254,6 +266,9 @@
     iframe.src = container.dataset.url;
     iframe.loading = "lazy";
     iframe.onload = () => loader.remove();
+    iframe.onerror = () => {
+      loader.innerHTML = '<div style="color:red;">Failed to load content.</div>';
+    };
     container.appendChild(iframe);
     container.dataset.loaded = "true";
   }
