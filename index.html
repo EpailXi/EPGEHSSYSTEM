@@ -1,173 +1,167 @@
+<!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>EPG EHS System</title>
   <style>
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: #f4f4f4;
+      background-color: #f4f4f4;
     }
+
     header {
-      background: #004d99;
-      color: #fff;
-      padding: 6px 10px;
-      text-align: center;
-    }
-    .logo img {
-      height: 26px;
-      vertical-align: middle;
-      margin-right: 8px;
-    }
-    .title {
-      font-size: 18px;
-      font-weight: bold;
-      vertical-align: middle;
-    }
-    nav {
+      background-color: #004080;
+      color: white;
+      padding: 10px 20px;
       display: flex;
-      background: #e6e6e6;
-      border-bottom: 1px solid #ccc;
-      flex-wrap: wrap;
+      align-items: center;
     }
-    nav button {
-      flex: 1;
+
+    header img {
+      height: 40px;
+      margin-right: 15px;
+    }
+
+    header h1 {
+      font-size: 1.5rem;
+      margin: 0;
+    }
+
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      background-color: #ddd;
       padding: 10px;
-      border: none;
-      background: inherit;
-      font-size: 15px;
+    }
+
+    .tabs button {
+      background: #fff;
+      border: 1px solid #ccc;
+      margin: 2px;
+      padding: 8px 16px;
       cursor: pointer;
       transition: background 0.3s;
-      /* ensure buttons don't submit forms */
-      type: button;
+      border-radius: 4px;
+      font-weight: bold;
     }
-    nav button:hover, nav button.active {
-      background: #d0e0ff;
+
+    .tabs button.active {
+      background: #004080;
+      color: #fff;
     }
-    .tab-content, .subtab-content {
-      display: none;
+
+    .subtabs {
+      display: flex;
+      margin-top: 10px;
+      padding-left: 10px;
     }
-    .tab-content.active, .subtab-content.active {
-      display: block;
+
+    .subtabs button {
+      background: #eee;
+      border: 1px solid #ccc;
+      margin: 2px;
+      padding: 6px 12px;
+      cursor: pointer;
+      border-radius: 4px;
     }
+
+    .subtabs button.active {
+      background: #004080;
+      color: #fff;
+    }
+
+    .content {
+      padding: 10px;
+    }
+
     iframe {
       width: 100%;
-      height: 80vh;
-      min-height: 600px;
+      height: 500px;
       border: none;
     }
-    .audio-buttons {
-      display: flex;
-      gap: 20px;
-      justify-content: center;
-      padding: 20px;
-      flex-wrap: wrap;
-    }
-    .audio-buttons button {
-      cursor: pointer;
-      font-size: 16px;
-      padding: 8px 12px;
-      border: none;
-      background: #004d99;
-      color: #fff;
-      border-radius: 4px;
-      type: button;
-    }
-    .audio-buttons button:hover {
-      background: #003366;
-    }
-    .audio-section {
+
+    .loader {
       display: none;
       text-align: center;
-      padding: 20px;
+      margin: 20px;
     }
+
+    .audio-section {
+      display: none;
+    }
+
     .audio-section.active {
       display: block;
     }
-    .subtabs {
+
+    .voice-buttons {
       display: flex;
-      justify-content: center;
-      background: #f0f0f0;
-      border-bottom: 1px solid #ccc;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 10px 0;
     }
-    .subtabs button {
-      padding: 8px 16px;
-      border: none;
-      background: inherit;
+
+    .voice-buttons button {
+      padding: 6px 12px;
+      border: 1px solid #888;
+      border-radius: 4px;
       cursor: pointer;
-      font-size: 14px;
-      type: button;
+      background: #f5f5f5;
     }
-    .subtabs button:hover, .subtabs button.active {
-      background: #d0e0ff;
-    }
-    .loader {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 40px;
-      font-size: 16px;
-      color: #333;
-    }
-    .spinner {
-      width: 40px;
-      height: 40px;
-      border: 4px solid #ccc;
-      border-top: 4px solid #004d99;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      margin-bottom: 10px;
-    }
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+
+    .voice-buttons button.active {
+      background: #004080;
+      color: white;
     }
   </style>
 </head>
+
 <body>
-
-<header>
-  <span class="logo">
+  <header>
     <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALwAAAAeCAYAAABAVkZqAAAACXBIWXMAAA7EAAAOxAGVKw4bAAABbUlEQVR4nO3azWoTURRF0RPReQMyK4QdCNKzEjGCEOG0LzEg6sBB2ETRMwzA+6V0m3c95h9J9umblpkkkhhRRSGGFFFIYUUUhhRRSGFFFIYUUUhhRRSGFFN4j+Sfq/xsDa1xzvVuQ7Rf3YcA+rNwHZjbF3Ftxlm9mZ8oH7AhPGVWW09X1w97n0Hyz0fCfp/XetPT/dzN6vbX89ePXt9d8zYm4SnRmzN6U7qf3RuY0ed/q95q+5++Y3mNnLFvS3tuhvW67PP7bpP3RMh5sRd17Pku1euKZl9q1ep2Zv/eqT7wdVumPf2n1yrb3cnZWrO/Bfzb6xBvjQX0QPgVR0EPYFMfBD2BTXwQ9gU18EPYFNfBD2BTXwQ9gU18EPYFNfBD2BTXwQ9gU18EPYFfdvlmc19ybq6f8B/OB4Fw5bKMgAAAAASUVORK5CYII=" alt="EPG Logo">
-  </span>
-  <span class="title">EPG EHS System</span>
-</header>
+    <h1>EPG EHS System</h1>
+  </header>
 
-<nav role="tablist">
-  <button role="tab" aria-controls="content-induction" class="active" data-tab="induction">Induction</button>
-  <button role="tab" aria-controls="content-cidb" data-tab="cidb">CIDB Slip Print</button>
-  <button role="tab" aria-controls="content-immigration" data-tab="immigration">Immigration Fomema Check</button>
-  <button role="tab" aria-controls="content-voiceover" data-tab="voiceover">Induction Voice Over</button>
-  <button role="tab" aria-controls="content-ppeInventory" data-tab="ppeInventory">PPE Inventory</button>
-  <button role="tab" aria-controls="content-ppeForm" data-tab="ppeForm">PPE Issue & Return</button>
-</nav>
+  <div class="tabs" role="tablist">
+    <button onclick="activateTab('induction')" type="button">Induction</button>
+    <button onclick="activateTab('cidb')" type="button">CIDB</button>
+    <button onclick="activateTab('immigration')" type="button">Immigration</button>
+    <button onclick="activateTab('voiceover')" type="button">Voiceover</button>
+    <button onclick="activateTab('ppe')" type="button">PPE Inventory</button>
+    <button onclick="activateTab('ppeform')" type="button">PPE Form</button>
+  </div>
 
-<main>
-  <div id="content-induction" class="tab-content active" data-url="https://epailxi.github.io/EPGNTPINDUCTION/"></div>
-  <div id="content-cidb" class="tab-content" data-url="https://epailxi.github.io/CIDBSlipDownload/"></div>
-  <div id="content-immigration" class="tab-content" data-url="https://eservices.imi.gov.my/myimms/FomemaStatus"></div>
+  <div class="subtabs" id="ppeSubtabs">
+    <button onclick="activateSubtab('issue')" type="button">Issue & Return</button>
+    <button onclick="activateSubtab('search')" type="button">Search</button>
+  </div>
 
-  <div id="content-voiceover" class="tab-content">
-    <div class="audio-buttons">
-      <button data-lang="chinese">▶ Chinese Voice Over</button>
-      <button data-lang="vietnamese">▶ Vietnamese Voice Over</button>
-      <button data-lang="bangla">▶ Bangla Voice Over</button>
-    </div>
-    <div id="chinese" class="audio-section">
+  <div class="voice-buttons" id="voiceButtons">
+    <button onclick="showAudio('chinese')" type="button">Chinese</button>
+    <button onclick="showAudio('vietnam')" type="button">Vietnamese</button>
+    <button onclick="showAudio('bangla')" type="button">Bangla</button>
+  </div>
+
+  <div class="content">
+    <div class="loader" id="loader">Loading...</div>
+    <iframe id="mainFrame" loading="lazy"></iframe>
+
+    <div class="audio-section" id="chinese">
       <audio controls>
         <source src="ChinesenH.mp3" type="audio/mpeg">
         Your browser does not support the audio element.
       </audio>
     </div>
-    <div id="vietnamese" class="audio-section">
+    <div class="audio-section" id="vietnam">
       <audio controls>
         <source src="VietnamH.mp3" type="audio/mpeg">
         Your browser does not support the audio element.
       </audio>
     </div>
-    <div id="bangla" class="audio-section">
+    <div class="audio-section" id="bangla">
       <audio controls>
         <source src="BanglaH.mp3" type="audio/mpeg">
         Your browser does not support the audio element.
@@ -175,81 +169,67 @@
     </div>
   </div>
 
-  <div id="content-ppeInventory" class="tab-content" data-url="https://twswzvv3ark.sg.feishu.cn/file/EJDJbsCNZoMoRIx2wujlpazVgDh"></div>
-  <div id="content-ppeForm" class="tab-content">
-    <div class="subtabs" role="tablist">
-      <button aria-controls="subcontent-issue" class="active" data-subtab="issue">Issue & Return</button>
-      <button aria-controls="subcontent-search" data-subtab="search">Search</button>
-    </div>
-    <div id="subcontent-issue" class="subtab-content active" data-url="https://twswzvv3ark.sg.feishu.cn/share/base/form/shrlgLgnuhFnHx9HmffMoKyrfjf"></div>
-    <div id="subcontent-search" class="subtab-content" data-url="https://twswzvv3ark.sg.feishu.cn/share/base/query/shrlgX74PkvggRvBLlfoFwKzXtZ"></div>
-  </div>
-</main>
+  <script>
+    function activateTab(tab) {
+      document.querySelectorAll('.tabs button').forEach(btn => btn.classList.remove('active'));
+      document.querySelector(`.tabs button[onclick*="${tab}"]`).classList.add('active');
 
-<script>
-  const tabs = document.querySelectorAll("nav button");
-  const contents = document.querySelectorAll(".tab-content");
-  const subtabButtons = document.querySelectorAll(".subtabs button");
-  const subcontents = document.querySelectorAll(".subtab-content");
+      document.getElementById('ppeSubtabs').style.display = tab === 'ppeform' ? 'flex' : 'none';
+      document.getElementById('voiceButtons').style.display = tab === 'voiceover' ? 'flex' : 'none';
 
-  function getStorage(key) {
-    try { return localStorage.getItem(key); } catch { return null; }
-  }
-  function setStorage(key, value) {
-    try { localStorage.setItem(key, value); } catch {}
-  }
-
-  function activateTab(tab) {
-    tabs.forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
-    contents.forEach(c => c.classList.toggle('active', c.id === `content-${tab}`));
-    const c = document.getElementById(`content-${tab}`);
-    if (c) loadIframeIfNeeded(c);
-    // Reset audio when leaving voiceover
-    if (tab !== 'voiceover') {
+      // Stop all audio
+      document.querySelectorAll('audio').forEach(a => a.pause());
       document.querySelectorAll('.audio-section').forEach(s => s.classList.remove('active'));
+
+      const iframe = document.getElementById('mainFrame');
+      const loader = document.getElementById('loader');
+      loader.style.display = 'block';
+      iframe.style.display = 'none';
+
+      let src = '';
+      switch (tab) {
+        case 'induction': src = 'https://www.epg-module.com/induction'; break;
+        case 'cidb': src = 'https://www.epg-module.com/cidb'; break;
+        case 'immigration': src = 'https://www.epg-module.com/immigration'; break;
+        case 'ppe': src = 'https://www.epg-module.com/ppe'; break;
+        case 'ppeform':
+          activateSubtab('issue');
+          return;
+        case 'voiceover':
+          iframe.src = '';
+          loader.style.display = 'none';
+          return;
+      }
+      iframe.src = src;
+      iframe.onload = () => loader.style.display = 'none';
+      iframe.style.display = 'block';
+      localStorage.setItem('selectedTab', tab);
     }
-  }
-  function activateSubtab(sub) {
-    subtabButtons.forEach(b => b.classList.toggle('active', b.dataset.subtab === sub));
-    subcontents.forEach(c => c.classList.toggle('active', c.id === `subcontent-${sub}`));
-    const c = document.getElementById(`subcontent-${sub}`);
-    if (c) loadIframeIfNeeded(c);
-  }
 
-  const saved = getStorage('activeTab');
-  if (saved) activateTab(saved);
-  else loadIframeIfNeeded(document.querySelector('.tab-content.active'));
+    function activateSubtab(subtab) {
+      document.querySelectorAll('#ppeSubtabs button').forEach(btn => btn.classList.remove('active'));
+      document.querySelector(`#ppeSubtabs button[onclick*="${subtab}"]`).classList.add('active');
+      const iframe = document.getElementById('mainFrame');
+      const loader = document.getElementById('loader');
+      loader.style.display = 'block';
+      iframe.style.display = 'none';
 
-  tabs.forEach(btn => btn.addEventListener('click', () => {
-    setStorage('activeTab', btn.dataset.tab);
-    activateTab(btn.dataset.tab);
-  }));
+      iframe.src = `https://www.epg-module.com/${subtab}`;
+      iframe.onload = () => loader.style.display = 'none';
+      iframe.style.display = 'block';
+    }
 
-  document.querySelectorAll('.audio-buttons button').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const lang = btn.dataset.lang;
-      document.querySelectorAll('.audio-section').forEach(s => s.classList.remove('active'));
+    function showAudio(lang) {
+      document.querySelectorAll('.voice-buttons button').forEach(btn => btn.classList.remove('active'));
+      document.querySelector(`.voice-buttons button[onclick*="${lang}"]`).classList.add('active');
+      document.querySelectorAll('.audio-section').forEach(sec => sec.classList.remove('active'));
       document.getElementById(lang).classList.add('active');
-    });
-  });
+    }
 
-  subtabButtons.forEach(btn => btn.addEventListener('click', () => activateSubtab(btn.dataset.subtab)));
-
-  function loadIframeIfNeeded(el) {
-    if (el.dataset.loaded || !el.dataset.url) return;
-    const loader = document.createElement('div');
-    loader.className = 'loader';
-    loader.innerHTML = '<div class="spinner"></div><div>Please wait ~5 seconds...</div>';
-    el.appendChild(loader);
-    const iframe = document.createElement('iframe');
-    iframe.src = el.dataset.url;
-    iframe.loading = 'lazy';
-    iframe.onload = () => loader.remove();
-    iframe.onerror = () => loader.innerHTML = '<div style="color:red;">Failed to load content.</div>';
-    el.appendChild(iframe);
-    el.dataset.loaded = 'true';
-  }
-</script>
-
+    // Restore last selected tab on load
+    const savedTab = localStorage.getItem('selectedTab') || 'induction';
+    activateTab(savedTab);
+  </script>
 </body>
+
 </html>
