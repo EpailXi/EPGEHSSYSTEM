@@ -121,7 +121,7 @@
 
 <body>
   <header>
-    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALwAAAAeCAYAAABAVkZqAAAACXBIWXMAAA7EAAAOxAGVKw4bAAABbUlEQVR4nO3azWoTURRF0RPReQMyK4QdCNKzEjGCEOG0LzEg6sBB2ETRMwzA+6V0m3c95h9J9umblpkkkhhRRSGGFFFIYUUUhhRRSGFFFIYUUUhhRRSGFFN4j+Sfq/xsDa1xzvVuQ7Rf3YcA+rNwHZjbF3Ftxlm9mZ8oH7AhPGVWW09X1w97n0Hyz0fCfp/XetPT/dzN6vbX89ePXt9d8zYm4SnRmzN6U7qf3RuY0ed/q95q+5++Y3mNnLFvS3tuhvW67PP7bpP3RMh5sRd17Pku1euKZl9q1ep2Zv/eqT7wdVumPf2n1yrb3cnZWrO/Bfzb6xBvjQX0QPgVR0EPYFMfBD2BTXwQ9gU18EPYFNfBD2BTXwQ9gU18EPYFNfBD2BTXwQ9gU18EPYFfdvlmc19ybq6f8B/OB4Fw5bKMgAAAAASUVORK5CYII=" alt="EPG Logo">
+    <img src="https://epailxi.github.io/EPGLogo%20(1).png" alt="EPG Logo">
     <h1>EPG EHS System</h1>
   </header>
 
@@ -209,19 +209,17 @@
     function activateSubtab(subtab) {
       document.querySelectorAll('#ppeSubtabs button').forEach(btn => btn.classList.remove('active'));
       document.querySelector(`#ppeSubtabs button[onclick*="${subtab}"]`).classList.add('active');
-
       const iframe = document.getElementById('mainFrame');
       const loader = document.getElementById('loader');
       loader.style.display = 'block';
       iframe.style.display = 'none';
 
-      let src = '';
-      switch (subtab) {
-        case 'issue': src = 'https://twswzvv3ark.sg.feishu.cn/share/base/form/shrlgLgnuhFnHx9HmffMoKyrfjf'; break;
-        case 'search': src = 'https://twswzvv3ark.sg.feishu.cn/share/base/query/shrlgX74PkvggRvBLlfoFwKzXtZ'; break;
+      if (subtab === 'issue') {
+        iframe.src = 'https://twswzvv3ark.sg.feishu.cn/share/base/form/shrlgLgnuhFnHx9HmffMoKyrfjf';
+      } else if (subtab === 'search') {
+        iframe.src = 'https://twswzvv3ark.sg.feishu.cn/share/base/query/shrlgX74PkvggRvBLlfoFwKzXtZ';
       }
 
-      iframe.src = src;
       iframe.onload = () => loader.style.display = 'none';
       iframe.style.display = 'block';
     }
@@ -233,6 +231,7 @@
       document.getElementById(lang).classList.add('active');
     }
 
+    // Restore last selected tab on load
     const savedTab = localStorage.getItem('selectedTab') || 'induction';
     activateTab(savedTab);
   </script>
