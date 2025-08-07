@@ -188,10 +188,10 @@
 
       let src = '';
       switch (tab) {
-        case 'induction': src = 'https://www.epg-module.com/induction'; break;
-        case 'cidb': src = 'https://www.epg-module.com/cidb'; break;
-        case 'immigration': src = 'https://www.epg-module.com/immigration'; break;
-        case 'ppe': src = 'https://www.epg-module.com/ppe'; break;
+        case 'induction': src = 'https://epailxi.github.io/EPGNTPINDUCTION'; break;
+        case 'cidb': src = 'https://epailxi.github.io/CIDBSlipDownload'; break;
+        case 'immigration': src = 'https://eservices.imi.gov.my/myimms/FomemaStatus'; break;
+        case 'ppe': src = 'https://twswzvv3ark.sg.feishu.cn/file/EJDJbsCNZoMoRIx2wujlpazVgDh'; break;
         case 'ppeform':
           activateSubtab('issue');
           return;
@@ -209,12 +209,19 @@
     function activateSubtab(subtab) {
       document.querySelectorAll('#ppeSubtabs button').forEach(btn => btn.classList.remove('active'));
       document.querySelector(`#ppeSubtabs button[onclick*="${subtab}"]`).classList.add('active');
+
       const iframe = document.getElementById('mainFrame');
       const loader = document.getElementById('loader');
       loader.style.display = 'block';
       iframe.style.display = 'none';
 
-      iframe.src = `https://www.epg-module.com/${subtab}`;
+      let src = '';
+      switch (subtab) {
+        case 'issue': src = 'https://twswzvv3ark.sg.feishu.cn/share/base/form/shrlgLgnuhFnHx9HmffMoKyrfjf'; break;
+        case 'search': src = 'https://twswzvv3ark.sg.feishu.cn/share/base/query/shrlgX74PkvggRvBLlfoFwKzXtZ'; break;
+      }
+
+      iframe.src = src;
       iframe.onload = () => loader.style.display = 'none';
       iframe.style.display = 'block';
     }
@@ -226,7 +233,6 @@
       document.getElementById(lang).classList.add('active');
     }
 
-    // Restore last selected tab on load
     const savedTab = localStorage.getItem('selectedTab') || 'induction';
     activateTab(savedTab);
   </script>
