@@ -39,6 +39,8 @@
       font-size: 15px;
       cursor: pointer;
       transition: background 0.3s;
+      /* ensure buttons don't submit forms */
+      type: button;
     }
     nav button:hover, nav button.active {
       background: #d0e0ff;
@@ -62,9 +64,23 @@
       padding: 20px;
       flex-wrap: wrap;
     }
+    .audio-buttons button {
+      cursor: pointer;
+      font-size: 16px;
+      padding: 8px 12px;
+      border: none;
+      background: #004d99;
+      color: #fff;
+      border-radius: 4px;
+      type: button;
+    }
+    .audio-buttons button:hover {
+      background: #003366;
+    }
     .audio-section {
       display: none;
       text-align: center;
+      padding: 20px;
     }
     .audio-section.active {
       display: block;
@@ -81,6 +97,7 @@
       background: inherit;
       cursor: pointer;
       font-size: 14px;
+      type: button;
     }
     .subtabs button:hover, .subtabs button.active {
       background: #d0e0ff;
@@ -113,7 +130,7 @@
 
 <header>
   <span class="logo">
-    <!-- Logo Image Here -->
+    <img src="data:image/png;base64,..." alt="logo">
   </span>
   <span class="title">EPG EHS System</span>
 </header>
@@ -128,41 +145,44 @@
 </nav>
 
 <main>
-  <div id="content-induction" role="tabpanel" class="tab-content active" data-url="https://epailxi.github.io/EPGNTPINDUCTION/"></div>
-  <div id="content-cidb" role="tabpanel" class="tab-content" data-url="https://epailxi.github.io/CIDBSlipDownload/"></div>
-  <div id="content-immigration" role="tabpanel" class="tab-content" data-url="https://eservices.imi.gov.my/myimms/FomemaStatus"></div>
+  <div id="content-induction" class="tab-content active" data-url="https://epailxi.github.io/EPGNTPINDUCTION/"></div>
+  <div id="content-cidb" class="tab-content" data-url="https://epailxi.github.io/CIDBSlipDownload/"></div>
+  <div id="content-immigration" class="tab-content" data-url="https://eservices.imi.gov.my/myimms/FomemaStatus"></div>
 
-  <div id="content-voiceover" role="tabpanel" class="tab-content">
+  <div id="content-voiceover" class="tab-content">
     <div class="audio-buttons">
       <button data-lang="chinese">▶ Chinese Voice Over</button>
       <button data-lang="vietnamese">▶ Vietnamese Voice Over</button>
       <button data-lang="bangla">▶ Bangla Voice Over</button>
     </div>
     <div id="chinese" class="audio-section">
-      <audio preload="none" controls>
+      <audio controls>
         <source src="Chinese_voice_over_induction_H.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
       </audio>
     </div>
     <div id="vietnamese" class="audio-section">
-      <audio preload="none" controls>
+      <audio controls>
         <source src="Vietnam_voice_over_induction_H.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
       </audio>
     </div>
     <div id="bangla" class="audio-section">
-      <audio preload="none" controls>
+      <audio controls>
         <source src="Bangla_voice_over_induction_H.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
       </audio>
     </div>
   </div>
 
-  <div id="content-ppeInventory" role="tabpanel" class="tab-content" data-url="https://twswzvv3ark.sg.feishu.cn/file/EJDJbsCNZoMoRIx2wujlpazVgDh"></div>
-  <div id="content-ppeForm" role="tabpanel" class="tab-content">
+  <div id="content-ppeInventory" class="tab-content" data-url="https://twswzvv3ark.sg.feishu.cn/file/EJDJbsCNZoMoRIx2wujlpazVgDh"></div>
+  <div id="content-ppeForm" class="tab-content">
     <div class="subtabs" role="tablist">
-      <button role="tab" aria-controls="subcontent-issue" class="active" data-subtab="issue">Issue & Return</button>
-      <button role="tab" aria-controls="subcontent-search" data-subtab="search">Search</button>
+      <button aria-controls="subcontent-issue" class="active" data-subtab="issue">Issue & Return</button>
+      <button aria-controls="subcontent-search" data-subtab="search">Search</button>
     </div>
-    <div id="subcontent-issue" role="tabpanel" class="subtab-content active" data-url="https://twswzvv3ark.sg.feishu.cn/share/base/form/shrlgLgnuhFnHx9HmffMoKyrfjf"></div>
-    <div id="subcontent-search" role="tabpanel" class="subtab-content" data-url="https://twswzvv3ark.sg.feishu.cn/share/base/query/shrlgX74PkvggRvBLlfoFwKzXtZ"></div>
+    <div id="subcontent-issue" class="subtab-content active" data-url="https://twswzvv3ark.sg.feishu.cn/share/base/form/shrlgLgnuhFnHx9HmffMoKyrfjf"></div>
+    <div id="subcontent-search" class="subtab-content" data-url="https://twswzvv3ark.sg.feishu.cn/share/base/query/shrlgX74PkvggRvBLlfoFwKzXtZ"></div>
   </div>
 </main>
 
@@ -173,71 +193,61 @@
   const subcontents = document.querySelectorAll(".subtab-content");
 
   function getStorage(key) {
-    try { return localStorage.getItem(key); }
-    catch (e) { console.warn('LocalStorage failed:', e); return null; }
+    try { return localStorage.getItem(key); } catch { return null; }
   }
-
   function setStorage(key, value) {
-    try { localStorage.setItem(key, value); }
-    catch (e) { console.warn('LocalStorage set failed:', e); }
+    try { localStorage.setItem(key, value); } catch {}
   }
 
-  function activateTab(tabName) {
-    tabs.forEach(btn => btn.classList.toggle('active', btn.dataset.tab === tabName));
-    contents.forEach(div => div.classList.toggle('active', div.id === `content-${tabName}`));
-    const activeDiv = document.getElementById(`content-${tabName}`);
-    if (activeDiv) loadIframeIfNeeded(activeDiv);
+  function activateTab(tab) {
+    tabs.forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+    contents.forEach(c => c.classList.toggle('active', c.id === `content-${tab}`));
+    const c = document.getElementById(`content-${tab}`);
+    if (c) loadIframeIfNeeded(c);
+    // Reset audio when leaving voiceover
+    if (tab !== 'voiceover') {
+      document.querySelectorAll('.audio-section').forEach(s => s.classList.remove('active'));
+    }
+  }
+  function activateSubtab(sub) {
+    subtabButtons.forEach(b => b.classList.toggle('active', b.dataset.subtab === sub));
+    subcontents.forEach(c => c.classList.toggle('active', c.id === `subcontent-${sub}`));
+    const c = document.getElementById(`subcontent-${sub}`);
+    if (c) loadIframeIfNeeded(c);
   }
 
-  function activateSubtab(subName) {
-    subtabButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.subtab === subName));
-    subcontents.forEach(div => div.classList.toggle('active', div.id === `subcontent-${subName}`));
-    const activeDiv = document.getElementById(`subcontent-${subName}`);
-    if (activeDiv) loadIframeIfNeeded(activeDiv);
-  }
-
-  // Initialize saved tab or default
-  const savedTab = getStorage("activeTab");
-  if (savedTab) activateTab(savedTab);
+  const saved = getStorage('activeTab');
+  if (saved) activateTab(saved);
   else loadIframeIfNeeded(document.querySelector('.tab-content.active'));
 
-  // Tab click handlers
-  tabs.forEach(btn => {
-    btn.addEventListener("click", () => {
-      const tab = btn.dataset.tab;
-      setStorage("activeTab", tab);
-      activateTab(tab);
-      document.querySelectorAll(".audio-section").forEach(el => el.classList.remove("active"));
-    });
-  });
+  tabs.forEach(btn => btn.addEventListener('click', () => {
+    setStorage('activeTab', btn.dataset.tab);
+    activateTab(btn.dataset.tab);
+  }));
 
-  // Audio language switch
-  document.querySelectorAll(".audio-buttons button").forEach(btn => {
-    btn.addEventListener("click", () => {
+  document.querySelectorAll('.audio-buttons button').forEach(btn => {
+    btn.addEventListener('click', () => {
       const lang = btn.dataset.lang;
-      document.querySelectorAll(".audio-section").forEach(sec => sec.classList.remove("active"));
-      document.getElementById(lang).classList.add("active");
+      document.querySelectorAll('.audio-section').forEach(s => s.classList.remove('active'));
+      document.getElementById(lang).classList.add('active');
     });
   });
 
-  // Subtab click handlers
-  subtabButtons.forEach(btn => {
-    btn.addEventListener("click", () => activateSubtab(btn.dataset.subtab));
-  });
+  subtabButtons.forEach(btn => btn.addEventListener('click', () => activateSubtab(btn.dataset.subtab)));
 
-  function loadIframeIfNeeded(container) {
-    if (container.dataset.loaded || !container.dataset.url) return;
-    const loader = document.createElement("div");
-    loader.className = "loader";
+  function loadIframeIfNeeded(el) {
+    if (el.dataset.loaded || !el.dataset.url) return;
+    const loader = document.createElement('div');
+    loader.className = 'loader';
     loader.innerHTML = '<div class="spinner"></div><div>Please wait ~5 seconds...</div>';
-    container.appendChild(loader);
-    const iframe = document.createElement("iframe");
-    iframe.src = container.dataset.url;
-    iframe.loading = "lazy";
+    el.appendChild(loader);
+    const iframe = document.createElement('iframe');
+    iframe.src = el.dataset.url;
+    iframe.loading = 'lazy';
     iframe.onload = () => loader.remove();
     iframe.onerror = () => loader.innerHTML = '<div style="color:red;">Failed to load content.</div>';
-    container.appendChild(iframe);
-    container.dataset.loaded = "true";
+    el.appendChild(iframe);
+    el.dataset.loaded = 'true';
   }
 </script>
 
