@@ -116,6 +116,13 @@
       background: #004080;
       color: white;
     }
+
+    /* Compact audio controls spacing */
+    .audio-section audio {
+      display: block;
+      margin-bottom: 8px;
+      height: 32px;
+    }
   </style>
 </head>
 
@@ -149,23 +156,29 @@
     <div class="loader" id="loader">Loading...</div>
     <iframe id="mainFrame" loading="lazy"></iframe>
 
+    <!-- Voiceover: Controls on top -->
     <div class="audio-section" id="chinese">
       <audio controls>
         <source src="ChineseH.mp3" type="audio/mpeg">
         Your browser does not support the audio element.
       </audio>
+      <p>这里是中文语音的内容...</p>
     </div>
+
     <div class="audio-section" id="vietnam">
       <audio controls>
         <source src="VietnamH.mp3" type="audio/mpeg">
         Your browser does not support the audio element.
       </audio>
+      <p>Đây là nội dung tiếng Việt...</p>
     </div>
+
     <div class="audio-section" id="bangla">
       <audio controls>
         <source src="BanglaH.mp3" type="audio/mpeg">
         Your browser does not support the audio element.
       </audio>
+      <p>এটি বাংলা ভাষার বিষয়বস্তু...</p>
     </div>
   </div>
 
