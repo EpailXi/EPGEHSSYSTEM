@@ -117,7 +117,6 @@
       color: white;
     }
 
-    /* Compact audio controls spacing */
     .audio-section audio {
       display: block;
       margin-bottom: 8px;
@@ -156,53 +155,42 @@
     <button onclick="activateVisitorSubtab('chinese')" type="button">Chinese</button>
   </div>
 
+  <!-- Updated Voice Buttons -->
   <div class="voice-buttons" id="voiceButtons">
     <button onclick="showAudio('chinese')" type="button">Chinese</button>
-    <button onclick="showAudio('vietnam')" type="button">Vietnamese</button>
-    <button onclick="showAudio('bangla')" type="button">Bangla</button>
+    <button onclick="showAudio('urdu')" type="button">Urdu</button>
   </div>
 
   <div class="content">
     <div class="loader" id="loader">Loading...</div>
     <iframe id="mainFrame" loading="lazy"></iframe>
 
-    <!-- Voiceover Sections -->
+    <!-- Chinese Voice -->
     <div class="audio-section" id="chinese">
       <audio controls>
         <source src="ChineseH.mp3" type="audio/mpeg">
-        Your browser does not support the audio element.
       </audio>
       <p>这里是中文语音的内容...</p>
     </div>
 
-    <div class="audio-section" id="vietnam">
+    <!-- Urdu Voice (Replaced Bangla) -->
+    <div class="audio-section" id="urdu">
       <audio controls>
-        <source src="VietnamH.mp3" type="audio/mpeg">
-        Your browser does not support the audio element.
+        <source src="UrduH.mp3" type="audio/mpeg">
       </audio>
-      <p>Đây là nội dung tiếng Việt...</p>
+      <p>یہ اردو زبان کی آواز کا مواد ہے...</p>
     </div>
 
-    <div class="audio-section" id="bangla">
-      <audio controls>
-        <source src="BanglaH.mp3" type="audio/mpeg">
-        Your browser does not support the audio element.
-      </audio>
-      <p>এটি বাংলা ভাষার বিষয়বস্তু...</p>
-    </div>
-
-    <!-- Site Visitor Video Sections -->
+    <!-- Site Visitor Videos -->
     <div class="video-section" id="visitorEnglish">
       <video controls width="100%" height="500px">
         <source src="SiteVisitorEnglish.mp4" type="video/mp4">
-        Your browser does not support the video tag.
       </video>
     </div>
 
     <div class="video-section" id="visitorChinese">
       <video controls width="100%" height="500px">
         <source src="SiteVisitorInformationChinese.mp4" type="video/mp4">
-        Your browser does not support the video tag.
       </video>
     </div>
   </div>
@@ -212,12 +200,10 @@
       document.querySelectorAll('.tabs button').forEach(btn => btn.classList.remove('active'));
       document.querySelector(`.tabs button[onclick*="${tab}"]`).classList.add('active');
 
-      // Hide all subtabs and voice buttons
       document.getElementById('ppeSubtabs').style.display = 'none';
       document.getElementById('voiceButtons').style.display = 'none';
       document.getElementById('siteVisitorSubtabs').style.display = 'none';
 
-      // Stop all audio and hide all video sections
       document.querySelectorAll('audio').forEach(a => a.pause());
       document.querySelectorAll('.audio-section').forEach(s => s.classList.remove('active'));
       document.querySelectorAll('.video-section').forEach(v => v.style.display = 'none');
@@ -233,10 +219,14 @@
         case 'immigration': iframe.src = 'https://eservices.imi.gov.my/myimms/FomemaStatus'; break;
         case 'ppe': iframe.src = 'https://twswzvv3ark.sg.feishu.cn/file/EJDJbsCNZoMoRIx2wujlpazVgDh'; break;
         case 'ppeform': activateSubtab('issue'); return;
-        case 'voiceover': iframe.src = ''; loader.style.display='none'; return;
+        case 'voiceover':
+          iframe.src = '';
+          loader.style.display='none';
+          document.getElementById('voiceButtons').style.display = 'flex';
+          return;
         case 'sitevisitor':
           document.getElementById('siteVisitorSubtabs').style.display = 'flex';
-          activateVisitorSubtab('english'); // default subtab
+          activateVisitorSubtab('english');
           loader.style.display = 'none';
           return;
       }
@@ -284,7 +274,6 @@
       return str.charAt(0).toUpperCase() + str.slice(1);
     }
 
-    // Restore last selected tab on load
     const savedTab = localStorage.getItem('selectedTab') || 'induction';
     activateTab(savedTab);
   </script>
