@@ -1,282 +1,171 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EPG EHS System</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
-    }
-
-    header {
-      background-color: #004080;
-      color: white;
-      padding: 10px 20px;
-      display: flex;
-      align-items: center;
-    }
-
-    header img {
-      height: 40px;
-      margin-right: 15px;
-    }
-
-    header h1 {
-      font-size: 1.5rem;
-      margin: 0;
-    }
-
-    .tabs {
-      display: flex;
-      flex-wrap: wrap;
-      background-color: #ddd;
-      padding: 10px;
-    }
-
-    .tabs button {
-      background: #fff;
-      border: 1px solid #ccc;
-      margin: 2px;
-      padding: 8px 16px;
-      cursor: pointer;
-      transition: background 0.3s;
-      border-radius: 4px;
-      font-weight: bold;
-    }
-
-    .tabs button.active {
-      background: #004080;
-      color: #fff;
-    }
-
-    .subtabs {
-      display: flex;
-      margin-top: 10px;
-      padding-left: 10px;
-    }
-
-    .subtabs button {
-      background: #eee;
-      border: 1px solid #ccc;
-      margin: 2px;
-      padding: 6px 12px;
-      cursor: pointer;
-      border-radius: 4px;
-    }
-
-    .subtabs button.active {
-      background: #004080;
-      color: #fff;
-    }
-
-    .content {
-      padding: 10px;
-    }
-
-    iframe {
-      width: 100%;
-      height: 500px;
-      border: none;
-    }
-
-    .loader {
-      display: none;
-      text-align: center;
-      margin: 20px;
-    }
-
-    .audio-section {
-      display: none;
-    }
-
-    .audio-section.active {
-      display: block;
-    }
-
-    .voice-buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin: 10px 0;
-    }
-
-    .voice-buttons button {
-      padding: 6px 12px;
-      border: 1px solid #888;
-      border-radius: 4px;
-      cursor: pointer;
-      background: #f5f5f5;
-    }
-
-    .voice-buttons button.active {
-      background: #004080;
-      color: white;
-    }
-
-    .audio-section audio {
-      display: block;
-      margin-bottom: 8px;
-      height: 32px;
-    }
-
-    .video-section {
-      display: none;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EPG EHS System</title>
+<style>
+body{margin:0;font-family:Arial,sans-serif;background:#f4f4f4}
+header{background:#004080;color:#fff;padding:10px 20px;display:flex;align-items:center}
+header img{height:40px;margin-right:15px}
+header h1{font-size:1.5rem;margin:0}
+.tabs{display:flex;flex-wrap:wrap;background:#ddd;padding:10px}
+.tabs button{background:#fff;border:1px solid #ccc;margin:2px;padding:8px 16px;cursor:pointer;border-radius:4px;font-weight:bold}
+.tabs button.active{background:#004080;color:#fff}
+.tabs button.offline-soon{background:#d32f2f;color:#fff;border-color:#b71c1c}
+.subtabs{display:flex;margin-top:10px;padding-left:10px}
+.subtabs button{background:#eee;border:1px solid #ccc;margin:2px;padding:6px 12px;cursor:pointer;border-radius:4px}
+.subtabs button.active{background:#004080;color:#fff}
+.content{padding:10px}
+iframe{width:100%;height:500px;border:none}
+.loader{display:none;text-align:center;margin:20px}
+.audio-section{display:none}
+.audio-section.active{display:block}
+.voice-buttons{display:flex;flex-wrap:wrap;gap:10px;margin:10px 0}
+.voice-buttons button{padding:6px 12px;border:1px solid #888;border-radius:4px;cursor:pointer;background:#f5f5f5}
+.voice-buttons button.active{background:#004080;color:white}
+.audio-section audio{display:block;margin-bottom:8px;height:32px}
+.video-section{display:none}
+</style>
 </head>
-
 <body>
-  <header>
-    <img src="https://epailxi.github.io/EPGEHSSYSTEM/EPGLogo.png" alt="EPG Logo">
-    <h1>EPG EHS System</h1>
-  </header>
+<header>
+<img src="https://epailxi.github.io/EPGEHSSYSTEM/EPGLogo.png" alt="EPG Logo">
+<h1>EPG EHS System</h1>
+</header>
 
-  <div class="tabs" role="tablist">
-    <button onclick="activateTab('induction')" type="button">Induction</button>
-    <button onclick="activateTab('cidb')" type="button">CIDB</button>
-    <button onclick="activateTab('immigration')" type="button">Immigration</button>
-    <button onclick="activateTab('voiceover')" type="button">Voiceover</button>
-    <button onclick="activateTab('ppe')" type="button">PPE Inventory</button>
-    <button onclick="activateTab('ppeform')" type="button">PPE Form</button>
-    <button onclick="activateTab('sitevisitor')" type="button">Site Visitor Safety</button>
-  </div>
+<div class="tabs" role="tablist">
+<button onclick="activateTab('induction')" type="button">Induction</button>
+<button onclick="activateTab('cidb')" type="button">CIDB</button>
+<button onclick="activateTab('immigration')" type="button">Immigration</button>
+<button onclick="activateTab('voiceover')" type="button">Voiceover</button>
+<button class="offline-soon" onclick="activateTab('ppe')" type="button">PPE Inventory (Offline Soon)</button>
+<button class="offline-soon" onclick="activateTab('ppeform')" type="button">PPE Form (Offline Soon)</button>
+<button onclick="activateTab('ehsinventory')" type="button">EHS Inventory</button>
+<button onclick="activateTab('sitevisitor')" type="button">Site Visitor Safety</button>
+</div>
 
-  <div class="subtabs" id="ppeSubtabs">
-    <button onclick="activateSubtab('issue')" type="button">Issue & Return</button>
-    <button onclick="activateSubtab('search')" type="button">Search</button>
-  </div>
+<div class="subtabs" id="ppeSubtabs">
+<button onclick="activateSubtab('issue')" type="button">Issue & Return</button>
+<button onclick="activateSubtab('search')" type="button">Search</button>
+</div>
 
-  <div class="subtabs" id="siteVisitorSubtabs" style="display:none;">
-    <button onclick="activateVisitorSubtab('english')" type="button">English</button>
-    <button onclick="activateVisitorSubtab('chinese')" type="button">Chinese</button>
-  </div>
+<div class="subtabs" id="siteVisitorSubtabs" style="display:none;">
+<button onclick="activateVisitorSubtab('english')" type="button">English</button>
+<button onclick="activateVisitorSubtab('chinese')" type="button">Chinese</button>
+</div>
 
-  <!-- Updated Voice Buttons -->
-  <div class="voice-buttons" id="voiceButtons">
-    <button onclick="showAudio('chinese')" type="button">Chinese</button>
-    <button onclick="showAudio('urdu')" type="button">Urdu</button>
-  </div>
+<div class="voice-buttons" id="voiceButtons">
+<button onclick="showAudio('chinese')" type="button">Chinese</button>
+<button onclick="showAudio('urdu')" type="button">Urdu</button>
+</div>
 
-  <div class="content">
-    <div class="loader" id="loader">Loading...</div>
-    <iframe id="mainFrame" loading="lazy"></iframe>
+<div class="content">
+<div class="loader" id="loader">Loading...</div>
+<iframe id="mainFrame" loading="lazy"></iframe>
 
-    <!-- Chinese Voice -->
-    <div class="audio-section" id="chinese">
-      <audio controls>
-        <source src="ChineseH.mp3" type="audio/mpeg">
-      </audio>
-      <p>这里是中文语音的内容...</p>
-    </div>
+<div class="audio-section" id="chinese">
+<audio controls><source src="ChineseH.mp3" type="audio/mpeg"></audio>
+<p>这里是中文语音的内容...</p>
+</div>
 
-    <!-- Urdu Voice (Replaced Bangla) -->
-    <div class="audio-section" id="urdu">
-      <audio controls>
-        <source src="UrduH.mp3" type="audio/mpeg">
-      </audio>
-      <p>یہ اردو زبان کی آواز کا مواد ہے...</p>
-    </div>
+<div class="audio-section" id="urdu">
+<audio controls><source src="UrduH.mp3" type="audio/mpeg"></audio>
+<p>یہ اردو زبان کی آواز کا مواد ہے...</p>
+</div>
 
-    <!-- Site Visitor Videos -->
-    <div class="video-section" id="visitorEnglish">
-      <video controls width="100%" height="500px">
-        <source src="SiteVisitorEnglish.mp4" type="video/mp4">
-      </video>
-    </div>
+<div class="video-section" id="visitorEnglish">
+<video controls width="100%" height="500px">
+<source src="SiteVisitorEnglish.mp4" type="video/mp4">
+</video>
+</div>
 
-    <div class="video-section" id="visitorChinese">
-      <video controls width="100%" height="500px">
-        <source src="SiteVisitorInformationChinese.mp4" type="video/mp4">
-      </video>
-    </div>
-  </div>
+<div class="video-section" id="visitorChinese">
+<video controls width="100%" height="500px">
+<source src="SiteVisitorInformationChinese.mp4" type="video/mp4">
+</video>
+</div>
+</div>
 
-  <script>
-    function activateTab(tab) {
-      document.querySelectorAll('.tabs button').forEach(btn => btn.classList.remove('active'));
-      document.querySelector(`.tabs button[onclick*="${tab}"]`).classList.add('active');
+<script>
+function activateTab(tab){
+document.querySelectorAll('.tabs button').forEach(btn=>btn.classList.remove('active'));
+document.querySelector(`.tabs button[onclick*="${tab}"]`).classList.add('active');
 
-      document.getElementById('ppeSubtabs').style.display = 'none';
-      document.getElementById('voiceButtons').style.display = 'none';
-      document.getElementById('siteVisitorSubtabs').style.display = 'none';
+document.getElementById('ppeSubtabs').style.display='none';
+document.getElementById('voiceButtons').style.display='none';
+document.getElementById('siteVisitorSubtabs').style.display='none';
 
-      document.querySelectorAll('audio').forEach(a => a.pause());
-      document.querySelectorAll('.audio-section').forEach(s => s.classList.remove('active'));
-      document.querySelectorAll('.video-section').forEach(v => v.style.display = 'none');
+document.querySelectorAll('audio').forEach(a=>a.pause());
+document.querySelectorAll('.audio-section').forEach(s=>s.classList.remove('active'));
+document.querySelectorAll('.video-section').forEach(v=>v.style.display='none');
 
-      const iframe = document.getElementById('mainFrame');
-      const loader = document.getElementById('loader');
-      loader.style.display = 'block';
-      iframe.style.display = 'none';
+const iframe=document.getElementById('mainFrame');
+const loader=document.getElementById('loader');
+loader.style.display='block';
+iframe.style.display='none';
 
-      switch(tab) {
-        case 'induction': iframe.src = 'https://epailxi.github.io/EPGNTPINDUCTION'; break;
-        case 'cidb': iframe.src = 'https://epailxi.github.io/CIDBSlipDownload'; break;
-        case 'immigration': iframe.src = 'https://eservices.imi.gov.my/myimms/FomemaStatus'; break;
-        case 'ppe': iframe.src = 'https://twswzvv3ark.sg.feishu.cn/file/EJDJbsCNZoMoRIx2wujlpazVgDh'; break;
-        case 'ppeform': activateSubtab('issue'); return;
-        case 'voiceover':
-          iframe.src = '';
-          loader.style.display='none';
-          document.getElementById('voiceButtons').style.display = 'flex';
-          return;
-        case 'sitevisitor':
-          document.getElementById('siteVisitorSubtabs').style.display = 'flex';
-          activateVisitorSubtab('english');
-          loader.style.display = 'none';
-          return;
-      }
+switch(tab){
+case 'induction': iframe.src='https://epailxi.github.io/EPGNTPINDUCTION'; break;
+case 'cidb': iframe.src='https://epailxi.github.io/CIDBSlipDownload'; break;
+case 'immigration': iframe.src='https://eservices.imi.gov.my/myimms/FomemaStatus'; break;
+case 'ppe': iframe.src='https://twswzvv3ark.sg.feishu.cn/file/EJDJbsCNZoMoRIx2wujlpazVgDh'; break;
+case 'ppeform': activateSubtab('issue'); return;
+case 'ehsinventory': iframe.src='https://twswzvv3ark.aiforce.cloud/app/app_4kbvtsyp9s7h8'; break;
+case 'voiceover':
+iframe.src='';
+loader.style.display='none';
+document.getElementById('voiceButtons').style.display='flex';
+return;
+case 'sitevisitor':
+document.getElementById('siteVisitorSubtabs').style.display='flex';
+activateVisitorSubtab('english');
+loader.style.display='none';
+return;
+}
 
-      iframe.onload = () => loader.style.display = 'none';
-      iframe.style.display = 'block';
-      localStorage.setItem('selectedTab', tab);
-    }
+iframe.onload=()=>loader.style.display='none';
+iframe.style.display='block';
+localStorage.setItem('selectedTab',tab);
+}
 
-    function activateSubtab(subtab) {
-      document.querySelectorAll('#ppeSubtabs button').forEach(btn => btn.classList.remove('active'));
-      document.querySelector(`#ppeSubtabs button[onclick*="${subtab}"]`).classList.add('active');
+function activateSubtab(subtab){
+document.querySelectorAll('#ppeSubtabs button').forEach(btn=>btn.classList.remove('active'));
+document.querySelector(`#ppeSubtabs button[onclick*="${subtab}"]`).classList.add('active');
 
-      const iframe = document.getElementById('mainFrame');
-      const loader = document.getElementById('loader');
-      loader.style.display = 'block';
-      iframe.style.display = 'none';
+const iframe=document.getElementById('mainFrame');
+const loader=document.getElementById('loader');
+loader.style.display='block';
+iframe.style.display='none';
 
-      if (subtab === 'issue') {
-        iframe.src = 'https://twswzvv3ark.sg.feishu.cn/share/base/form/shrlgLgnuhFnHx9HmffMoKyrfjf';
-      } else if (subtab === 'search') {
-        iframe.src = 'https://twswzvv3ark.sg.feishu.cn/share/base/query/shrlgX74PkvggRvBLlfoFwKzXtZ';
-      }
+if(subtab==='issue'){
+iframe.src='https://twswzvv3ark.sg.feishu.cn/share/base/form/shrlgLgnuhFnHx9HmffMoKyrfjf';
+}else if(subtab==='search'){
+iframe.src='https://twswzvv3ark.sg.feishu.cn/share/base/query/shrlgX74PkvggRvBLlfoFwKzXtZ';
+}
 
-      iframe.onload = () => loader.style.display = 'none';
-      iframe.style.display = 'block';
-    }
+iframe.onload=()=>loader.style.display='none';
+iframe.style.display='block';
+}
 
-    function showAudio(lang) {
-      document.querySelectorAll('.voice-buttons button').forEach(btn => btn.classList.remove('active'));
-      document.querySelector(`.voice-buttons button[onclick*="${lang}"]`).classList.add('active');
-      document.querySelectorAll('.audio-section').forEach(sec => sec.classList.remove('active'));
-      document.getElementById(lang).classList.add('active');
-    }
+function showAudio(lang){
+document.querySelectorAll('.voice-buttons button').forEach(btn=>btn.classList.remove('active'));
+document.querySelector(`.voice-buttons button[onclick*="${lang}"]`).classList.add('active');
+document.querySelectorAll('.audio-section').forEach(sec=>sec.classList.remove('active'));
+document.getElementById(lang).classList.add('active');
+}
 
-    function activateVisitorSubtab(lang) {
-      document.querySelectorAll('#siteVisitorSubtabs button').forEach(btn => btn.classList.remove('active'));
-      document.querySelector(`#siteVisitorSubtabs button[onclick*="${lang}"]`).classList.add('active');
+function activateVisitorSubtab(lang){
+document.querySelectorAll('#siteVisitorSubtabs button').forEach(btn=>btn.classList.remove('active'));
+document.querySelector(`#siteVisitorSubtabs button[onclick*="${lang}"]`).classList.add('active');
+document.querySelectorAll('.video-section').forEach(v=>v.style.display='none');
+document.getElementById('visitor'+capitalize(lang)).style.display='block';
+}
 
-      document.querySelectorAll('.video-section').forEach(v => v.style.display = 'none');
-      document.getElementById('visitor'+capitalize(lang)).style.display = 'block';
-    }
+function capitalize(str){return str.charAt(0).toUpperCase()+str.slice(1);}
 
-    function capitalize(str) {
-      return str.charAt(0).toUpperCase() + str.slice(1);
-    }
-
-    const savedTab = localStorage.getItem('selectedTab') || 'induction';
-    activateTab(savedTab);
-  </script>
+const savedTab=localStorage.getItem('selectedTab')||'induction';
+activateTab(savedTab);
+</script>
 </body>
-
 </html>
