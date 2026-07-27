@@ -45,7 +45,7 @@ iframe{width:100%;height:500px;border:none}
 <button onclick="activateTab('sitevisitor')" type="button">Site Visitor Safety</button>
 </div>
 
-<div class="subtabs" id="ppeSubtabs">
+<div class="subtabs" id="ppeSubtabs" style="display:none;">
 <button onclick="activateSubtab('issue')" type="button">Issue & Return</button>
 <button onclick="activateSubtab('search')" type="button">Search</button>
 </div>
@@ -55,7 +55,7 @@ iframe{width:100%;height:500px;border:none}
 <button onclick="activateVisitorSubtab('chinese')" type="button">Chinese</button>
 </div>
 
-<div class="voice-buttons" id="voiceButtons">
+<div class="voice-buttons" id="voiceButtons" style="display:none;">
 <button onclick="showAudio('chinese')" type="button">Chinese</button>
 <button onclick="showAudio('urdu')" type="button">Urdu</button>
 </div>
@@ -65,32 +65,53 @@ iframe{width:100%;height:500px;border:none}
 <iframe id="mainFrame" loading="lazy"></iframe>
 
 <div class="audio-section" id="chinese">
-<audio controls><source src="ChineseH.mp3" type="audio/mpeg"></audio>
+<audio controls preload="none"><source src="ChineseH.mp3" type="audio/mpeg"></audio>
 <p>这里是中文语音的内容...</p>
 </div>
 
 <div class="audio-section" id="urdu">
-<audio controls><source src="UrduH.mp3" type="audio/mpeg"></audio>
+<audio controls preload="none"><source src="UrduH.mp3" type="audio/mpeg"></audio>
 <p>یہ اردو زبان کی آواز کا مواد ہے...</p>
 </div>
 
 <div class="video-section" id="visitorEnglish">
-<video controls width="100%" height="500px">
+<video controls preload="none" width="100%" height="500">
 <source src="SiteVisitorEnglish.mp4" type="video/mp4">
 </video>
 </div>
 
 <div class="video-section" id="visitorChinese">
-<video controls width="100%" height="500px">
+<video controls preload="none" width="100%" height="500">
 <source src="SiteVisitorInformationChinese.mp4" type="video/mp4">
 </video>
 </div>
 </div>
 
 <script>
+let frameTimer;
+
+function loadFrame(src){
+const iframe=document.getElementById('mainFrame');
+const loader=document.getElementById('loader');
+clearTimeout(frameTimer);
+loader.textContent='Loading...';
+loader.style.display='block';
+iframe.style.display='none';
+// Attach the handler BEFORE setting src so a cached/instant load can't be missed.
+iframe.onload=()=>{clearTimeout(frameTimer);loader.style.display='none';};
+iframe.src=src;
+iframe.style.display='block';
+// Fallback for pages that block embedding (X-Frame-Options / CSP) and never fire load usefully.
+frameTimer=setTimeout(()=>{
+loader.innerHTML='This page is taking a while or cannot be embedded here. '+
+'<a href="'+src+'" target="_blank" rel="noopener">Open it in a new tab</a>.';
+},8000);
+}
+
 function activateTab(tab){
 document.querySelectorAll('.tabs button').forEach(btn=>btn.classList.remove('active'));
-document.querySelector(`.tabs button[onclick*="${tab}"]`).classList.add('active');
+const tabBtn=document.querySelector(`.tabs button[onclick*="'${tab}'"]`);
+if(tabBtn)tabBtn.classList.add('active');
 
 document.getElementById('ppeSubtabs').style.display='none';
 document.getElementById('voiceButtons').style.display='none';
@@ -102,50 +123,46 @@ document.querySelectorAll('.video-section').forEach(v=>v.style.display='none');
 
 const iframe=document.getElementById('mainFrame');
 const loader=document.getElementById('loader');
-loader.style.display='block';
-iframe.style.display='none';
+clearTimeout(frameTimer);
+localStorage.setItem('selectedTab',tab);
 
 switch(tab){
-case 'induction': iframe.src='https://epailxi.github.io/EPGNTPINDUCTION'; break;
-case 'cidb': iframe.src='https://epailxi.github.io/CIDBSlipDownload'; break;
-case 'immigration': iframe.src='https://eservices.imi.gov.my/myimms/FomemaStatus'; break;
-case 'ppe': iframe.src='https://twswzvv3ark.sg.feishu.cn/file/EJDJbsCNZoMoRIx2wujlpazVgDh'; break;
-case 'ppeform': activateSubtab('issue'); return;
-case 'ehsinventory': iframe.src='https://twswzvv3ark.aiforce.cloud/app/app_4kbvtsyp9s7h8'; break;
+case 'induction': loadFrame('https://epailxi.github.io/EPGNTPINDUCTION'); return;
+case 'cidb': loadFrame('https://epailxi.github.io/CIDBSlipDownload'); return;
+case 'immigration': loadFrame('https://eservices.imi.gov.my/myimms/FomemaStatus'); return;
+case 'ppe': loadFrame('https://twswzvv3ark.sg.feishu.cn/file/EJDJbsCNZoMoRIx2wujlpazVgDh'); return;
+case 'ppeform':
+document.getElementById('ppeSubtabs').style.display='flex';
+activateSubtab('issue');
+return;
+case 'ehsinventory': loadFrame('https://twswzvv3ark.aiforce.cloud/app/app_4kbvtsyp9s7h8'); return;
 case 'voiceover':
 iframe.src='';
+iframe.style.display='none';
 loader.style.display='none';
 document.getElementById('voiceButtons').style.display='flex';
+showAudio('chinese');
 return;
 case 'sitevisitor':
+iframe.src='';
+iframe.style.display='none';
 document.getElementById('siteVisitorSubtabs').style.display='flex';
 activateVisitorSubtab('english');
 loader.style.display='none';
 return;
 }
-
-iframe.onload=()=>loader.style.display='none';
-iframe.style.display='block';
-localStorage.setItem('selectedTab',tab);
 }
 
 function activateSubtab(subtab){
 document.querySelectorAll('#ppeSubtabs button').forEach(btn=>btn.classList.remove('active'));
-document.querySelector(`#ppeSubtabs button[onclick*="${subtab}"]`).classList.add('active');
-
-const iframe=document.getElementById('mainFrame');
-const loader=document.getElementById('loader');
-loader.style.display='block';
-iframe.style.display='none';
+const subBtn=document.querySelector(`#ppeSubtabs button[onclick*="'${subtab}'"]`);
+if(subBtn)subBtn.classList.add('active');
 
 if(subtab==='issue'){
-iframe.src='https://twswzvv3ark.sg.feishu.cn/share/base/form/shrlgLgnuhFnHx9HmffMoKyrfjf';
+loadFrame('https://twswzvv3ark.sg.feishu.cn/share/base/form/shrlgLgnuhFnHx9HmffMoKyrfjf');
 }else if(subtab==='search'){
-iframe.src='https://twswzvv3ark.sg.feishu.cn/share/base/query/shrlgX74PkvggRvBLlfoFwKzXtZ';
+loadFrame('https://twswzvv3ark.sg.feishu.cn/share/base/query/shrlgX74PkvggRvBLlfoFwKzXtZ');
 }
-
-iframe.onload=()=>loader.style.display='none';
-iframe.style.display='block';
 }
 
 function showAudio(lang){
