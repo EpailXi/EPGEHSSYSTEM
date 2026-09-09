@@ -12,7 +12,6 @@ header h1{font-size:1.5rem;margin:0}
 .tabs{display:flex;flex-wrap:wrap;background:#ddd;padding:10px}
 .tabs button{background:#fff;border:1px solid #ccc;margin:2px;padding:8px 16px;cursor:pointer;border-radius:4px;font-weight:bold}
 .tabs button.active{background:#004080;color:#fff}
-.tabs button.offline-soon{background:#d32f2f;color:#fff;border-color:#b71c1c}
 .subtabs{display:flex;margin-top:10px;padding-left:10px}
 .subtabs button{background:#eee;border:1px solid #ccc;margin:2px;padding:6px 12px;cursor:pointer;border-radius:4px}
 .subtabs button.active{background:#004080;color:#fff}
@@ -39,15 +38,8 @@ iframe{width:100%;height:500px;border:none}
 <button onclick="activateTab('cidb')" type="button">CIDB</button>
 <button onclick="activateTab('immigration')" type="button">Immigration</button>
 <button onclick="activateTab('voiceover')" type="button">Voiceover</button>
-<button class="offline-soon" onclick="activateTab('ppe')" type="button">PPE Inventory (Offline Soon)</button>
-<button class="offline-soon" onclick="activateTab('ppeform')" type="button">PPE Form (Offline Soon)</button>
 <button onclick="activateTab('ehsinventory')" type="button">EHS Inventory</button>
 <button onclick="activateTab('sitevisitor')" type="button">Site Visitor Safety</button>
-</div>
-
-<div class="subtabs" id="ppeSubtabs" style="display:none;">
-<button onclick="activateSubtab('issue')" type="button">Issue & Return</button>
-<button onclick="activateSubtab('search')" type="button">Search</button>
 </div>
 
 <div class="subtabs" id="siteVisitorSubtabs" style="display:none;">
@@ -113,7 +105,6 @@ document.querySelectorAll('.tabs button').forEach(btn=>btn.classList.remove('act
 const tabBtn=document.querySelector(`.tabs button[onclick*="'${tab}'"]`);
 if(tabBtn)tabBtn.classList.add('active');
 
-document.getElementById('ppeSubtabs').style.display='none';
 document.getElementById('voiceButtons').style.display='none';
 document.getElementById('siteVisitorSubtabs').style.display='none';
 
@@ -130,11 +121,6 @@ switch(tab){
 case 'induction': loadFrame('https://epailxi.github.io/EPGNTPINDUCTION'); return;
 case 'cidb': loadFrame('https://epailxi.github.io/CIDBSlipDownload'); return;
 case 'immigration': loadFrame('https://eservices.imi.gov.my/myimms/FomemaStatus'); return;
-case 'ppe': loadFrame('https://twswzvv3ark.sg.feishu.cn/file/EJDJbsCNZoMoRIx2wujlpazVgDh'); return;
-case 'ppeform':
-document.getElementById('ppeSubtabs').style.display='flex';
-activateSubtab('issue');
-return;
 case 'ehsinventory': loadFrame('https://twswzvv3ark.aiforce.cloud/app/app_4kbvtsyp9s7h8'); return;
 case 'voiceover':
 iframe.src='';
@@ -150,18 +136,6 @@ document.getElementById('siteVisitorSubtabs').style.display='flex';
 activateVisitorSubtab('english');
 loader.style.display='none';
 return;
-}
-}
-
-function activateSubtab(subtab){
-document.querySelectorAll('#ppeSubtabs button').forEach(btn=>btn.classList.remove('active'));
-const subBtn=document.querySelector(`#ppeSubtabs button[onclick*="'${subtab}'"]`);
-if(subBtn)subBtn.classList.add('active');
-
-if(subtab==='issue'){
-loadFrame('https://twswzvv3ark.sg.feishu.cn/share/base/form/shrlgLgnuhFnHx9HmffMoKyrfjf');
-}else if(subtab==='search'){
-loadFrame('https://twswzvv3ark.sg.feishu.cn/share/base/query/shrlgX74PkvggRvBLlfoFwKzXtZ');
 }
 }
 
@@ -181,7 +155,9 @@ document.getElementById('visitor'+capitalize(lang)).style.display='block';
 
 function capitalize(str){return str.charAt(0).toUpperCase()+str.slice(1);}
 
-const savedTab=localStorage.getItem('selectedTab')||'induction';
+// Fall back to Induction if a removed tab (e.g. old PPE tabs) is still saved in localStorage.
+let savedTab=localStorage.getItem('selectedTab')||'induction';
+if(!document.querySelector(`.tabs button[onclick*="'${savedTab}'"]`))savedTab='induction';
 activateTab(savedTab);
 </script>
 </body>
